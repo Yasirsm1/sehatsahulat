@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SehatSahulat — Home Care Services</title>
+<title>SehatHifazat — Home Care Services</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -22,9 +22,9 @@
   .slider-wrap { position: relative; width: 100%; height: 560px; overflow: hidden; margin-top: 72px; }
   .slider-track { display: flex; height: 100%; transition: transform 0.7s cubic-bezier(0.77,0,0.18,1); will-change: transform; }
   .slide { min-width: 100%; height: 100%; position: relative; overflow: hidden; flex-shrink: 0; }
-  .slide-bg { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(20,40,30,0.72) 0%, rgba(20,40,30,0.25) 60%, transparent 100%); }
-  .slide-content { position: absolute; left: 6%; bottom: 60px; color: white; max-width: 560px; }
+  .slide-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; z-index: 0; }
+  .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(10,20,15,0.78) 0%, rgba(10,20,15,0.35) 60%, rgba(10,20,15,0.15) 100%); z-index: 1; }
+  .slide-content { position: absolute; left: 6%; bottom: 60px; color: white; max-width: 580px; z-index: 2; }
   .slide-tag { display: inline-block; background: rgba(255,255,255,0.18); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.3); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 30px; margin-bottom: 16px; color: rgba(255,255,255,0.9); }
   .slide-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 52px); line-height: 1.15; margin-bottom: 14px; text-shadow: 0 2px 12px rgba(0,0,0,0.3); }
   .slide-desc { font-size: 16px; color: rgba(255,255,255,0.82); line-height: 1.6; font-weight: 300; margin-bottom: 28px; }
@@ -68,7 +68,7 @@
   .playlist-item.active .playlist-play { color: var(--clay); }
 
   /* NAV */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: rgba(253,248,242,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 5%; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  nav { position: sticky; top: 0; left: 0; right: 0; z-index: 200; background: rgba(253,248,242,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 5%; display: flex; align-items: center; justify-content: space-between; height: 72px; }
   .logo { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--text-dark); text-decoration: none; display: flex; align-items: center; gap: 10px; }
   .logo-icon { width: 36px; height: 36px; background: var(--forest); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; }
   .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
@@ -203,7 +203,34 @@
   footer ul a:hover { color: white; }
   .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 28px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
 
-  /* SCROLL REVEAL - simple, always visible */
+  /* SOCIAL TOP BAR */
+  .social-topbar { background: var(--forest); padding: 8px 5%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; position: relative; z-index: 201; }
+  .slider-wrap { position: relative; width: 100%; height: 560px; overflow: hidden; margin-top: 0; }
+  .social-topbar-left { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 400; }
+  .social-topbar-left span { color: rgba(255,255,255,0.5); margin-right: 6px; }
+  .social-icons { display: flex; align-items: center; gap: 6px; }
+  .social-icon { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; text-decoration: none; color: rgba(255,255,255,0.8); transition: background 0.2s, color 0.2s, transform 0.2s; border: 1px solid rgba(255,255,255,0.08); }
+  .social-icon:hover { transform: translateY(-2px); color: white; }
+  .social-icon.instagram:hover { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); border-color: transparent; }
+  .social-icon.facebook:hover { background: #1877F2; border-color: transparent; }
+  .social-icon.youtube:hover { background: #FF0000; border-color: transparent; }
+  .social-icon.linkedin:hover { background: #0A66C2; border-color: transparent; }
+  .social-icon.x:hover { background: #000; border-color: transparent; }
+  .social-icon.whatsapp:hover { background: #25D366; border-color: transparent; }
+  .social-icon svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+  /* FOOTER SOCIAL */
+  .footer-social-row { display: flex; align-items: center; gap: 10px; margin-top: 16px; }
+  .footer-social-label { font-size: 12px; color: rgba(255,255,255,0.4); margin-right: 4px; }
+  .footer-social-icon { width: 34px; height: 34px; border-radius: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; text-decoration: none; color: rgba(255,255,255,0.6); transition: all 0.2s; }
+  .footer-social-icon:hover { transform: translateY(-3px); color: white; }
+  .footer-social-icon.instagram:hover { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); border-color: transparent; }
+  .footer-social-icon.facebook:hover { background: #1877F2; border-color: transparent; }
+  .footer-social-icon.youtube:hover { background: #FF0000; border-color: transparent; }
+  .footer-social-icon.linkedin:hover { background: #0A66C2; border-color: transparent; }
+  .footer-social-icon.x:hover { background: #000; border-color: transparent; }
+  .footer-social-icon.whatsapp:hover { background: #25D366; border-color: transparent; }
+  .footer-social-icon svg { width: 15px; height: 15px; fill: currentColor; }
   .reveal { opacity: 1; transform: none; }
   .reveal.visible { opacity: 1; transform: none; }
   .fade-in { animation: fadeUp 0.6s ease forwards; }
@@ -281,11 +308,36 @@
 </head>
 <body>
 
+<!-- SOCIAL TOP BAR -->
+<div class="social-topbar">
+  <div class="social-topbar-left"><span>🌐</span> Follow us on social media</div>
+  <div class="social-icons" id="topSocialIcons">
+    <a href="https://instagram.com/sehatHifazat" target="_blank" class="social-icon instagram" id="si_instagram" title="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    <a href="https://facebook.com/sehatHifazat" target="_blank" class="social-icon facebook" id="si_facebook" title="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+    <a href="https://youtube.com/@sehatHifazat" target="_blank" class="social-icon youtube" id="si_youtube" title="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+    </a>
+    <a href="https://linkedin.com/company/sehatHifazat" target="_blank" class="social-icon linkedin" id="si_linkedin" title="LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <a href="https://x.com/sehatHifazat" target="_blank" class="social-icon x" id="si_x" title="X (Twitter)">
+      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+    <a href="https://wa.me/923000000000" target="_blank" class="social-icon whatsapp" id="si_whatsapp_top" title="WhatsApp">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.524 5.847L.057 23.882a.5.5 0 00.61.61l6.035-1.467A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.799 9.799 0 01-5.003-1.373l-.36-.213-3.724.905.922-3.63-.234-.374A9.796 9.796 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+    </a>
+  </div>
+</div>
+
 <!-- NAV -->
 <nav>
   <a href="#" class="logo">
     <div class="logo-icon">♡</div>
-    SehatSahulat
+    SehatHifazat
   </a>
   <ul class="nav-links">
     <li><a href="#slider" onclick="navTo(event,'slider')">Home</a></li>
@@ -302,11 +354,9 @@
 <div class="slider-wrap" id="slider">
   <div class="slider-track" id="sliderTrack">
 
-    <!-- Slide 1 -->
+    <!-- Slide 1: Caregiver holding elderly hands -->
     <div class="slide">
-      <div style="width:100%;height:100%;background:linear-gradient(135deg,#2c4a3a 0%,#3a6351 40%,#5a8c70 100%);display:flex;align-items:center;justify-content:center;">
-        <div style="font-size:120px;opacity:0.15;position:absolute;">🤲</div>
-      </div>
+      <img class="slide-bg" src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=1600&q=80&fit=crop" alt="Compassionate caregiver holding elderly patient hands" loading="eager"/>
       <div class="slide-overlay"></div>
       <div class="slide-content">
         <div class="slide-tag">Trusted Care at Home</div>
@@ -316,11 +366,9 @@
       </div>
     </div>
 
-    <!-- Slide 2 -->
+    <!-- Slide 2: Nurse with medication -->
     <div class="slide">
-      <div style="width:100%;height:100%;background:linear-gradient(135deg,#4a2c1a 0%,#7a4a2a 40%,#b5623a 100%);display:flex;align-items:center;justify-content:center;">
-        <div style="font-size:120px;opacity:0.15;position:absolute;">💊</div>
-      </div>
+      <img class="slide-bg" src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&q=80&fit=crop" alt="Nurse managing medication for elderly patient" loading="lazy"/>
       <div class="slide-overlay"></div>
       <div class="slide-content">
         <div class="slide-tag">Medical Support</div>
@@ -330,11 +378,9 @@
       </div>
     </div>
 
-    <!-- Slide 3 -->
+    <!-- Slide 3: Happy elderly couple at home -->
     <div class="slide">
-      <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a2c4a 0%,#2a4a7a 40%,#3a6ab5 100%);display:flex;align-items:center;justify-content:center;">
-        <div style="font-size:120px;opacity:0.15;position:absolute;">🏠</div>
-      </div>
+      <img class="slide-bg" src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1600&q=80&fit=crop" alt="Happy elderly couple enjoying life at home" loading="lazy"/>
       <div class="slide-overlay"></div>
       <div class="slide-content">
         <div class="slide-tag">All 3 Packages</div>
@@ -344,11 +390,9 @@
       </div>
     </div>
 
-    <!-- Slide 4 -->
+    <!-- Slide 4: Caregiver helping elderly with memory care -->
     <div class="slide">
-      <div style="width:100%;height:100%;background:linear-gradient(135deg,#3a2a10 0%,#6a4a18 40%,#c9951a 100%);display:flex;align-items:center;justify-content:center;">
-        <div style="font-size:120px;opacity:0.15;position:absolute;">🧠</div>
-      </div>
+      <img class="slide-bg" src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=1600&q=80&fit=crop" alt="Caregiver providing memory care support to elderly" loading="lazy"/>
       <div class="slide-overlay"></div>
       <div class="slide-content">
         <div class="slide-tag">Specialized Care</div>
@@ -358,15 +402,13 @@
       </div>
     </div>
 
-    <!-- Slide 5 -->
+    <!-- Slide 5: Family with elderly grandparent -->
     <div class="slide">
-      <div style="width:100%;height:100%;background:linear-gradient(135deg,#2a1a3a 0%,#4a2a6a 40%,#7a4ab5 100%);display:flex;align-items:center;justify-content:center;">
-        <div style="font-size:120px;opacity:0.15;position:absolute;">👨‍👩‍👧‍👦</div>
-      </div>
+      <img class="slide-bg" src="https://images.unsplash.com/photo-1609220136736-443140cffec6?w=1600&q=80&fit=crop" alt="Happy family with elderly grandparent at home" loading="lazy"/>
       <div class="slide-overlay"></div>
       <div class="slide-content">
         <div class="slide-tag">2,400+ Families Served</div>
-        <div class="slide-title">Trusted by families across Karachi &amp; Lahore</div>
+        <div class="slide-title">Trusted by families across Karachi</div>
         <div class="slide-desc">98% satisfaction rate. Background-verified caregivers. 24/7 support line — always here.</div>
         <a href="#testimonials" class="slide-btn">Read Reviews</a>
       </div>
@@ -393,7 +435,7 @@
   <div class="hero-text">
     <div class="hero-badge"><span></span> Licensed &amp; Insured Caregivers</div>
     <h1>Compassionate care, <em>right at home</em></h1>
-    <p class="hero-sub">SehatSahulat provides trusted, professional in-home caregiving so your loved ones can age with dignity, comfort, and independence — surrounded by everything familiar.</p>
+    <p class="hero-sub">SehatHifazat provides trusted, professional in-home caregiving so your loved ones can age with dignity, comfort, and independence — surrounded by everything familiar.</p>
     <div class="hero-actions">
       <a href="#contact" class="btn-primary">Schedule a Free Consultation</a>
       <a href="#pricing" class="btn-secondary">View Packages →</a>
@@ -448,7 +490,7 @@
   <div class="video-layout">
     <div>
       <div class="section-label">Watch &amp; Learn</div>
-      <h2 style="color:white;">See SehatSahulat <br/><em style="font-style:italic;color:var(--clay);">in action</em></h2>
+      <h2 style="color:white;">See SehatHifazat <br/><em style="font-style:italic;color:var(--clay);">in action</em></h2>
       <p class="section-sub">Watch how our caregivers bring warmth, professionalism, and peace of mind to families across Pakistan every single day.</p>
 
       <div class="video-features">
@@ -498,7 +540,7 @@
 
     <div>
       <div class="video-frame-wrap">
-        <iframe id="ytPlayer" src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0&modestbranding=1" title="SehatSahulat Care Video" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        <iframe id="ytPlayer" src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0&modestbranding=1" title="SehatHifazat Care Video" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
       </div>
 
     </div>
@@ -607,7 +649,7 @@
     <div class="testimonial-card">
       <div class="quote-mark">"</div>
       <div class="stars">★★★★★</div>
-      <p class="testimonial-text">The caregiver assigned to my mother has become part of our family. She's patient, genuinely caring, and my mother looks forward to her visits. SehatSahulat truly lives up to its name.</p>
+      <p class="testimonial-text">The caregiver assigned to my mother has become part of our family. She's patient, genuinely caring, and my mother looks forward to her visits. SehatHifazat truly lives up to its name.</p>
       <div class="testimonial-author"><div class="author-avatar" style="background:var(--rust);">LM</div><div><div class="author-name">Lubna M.</div><div class="author-relation">Daughter of client · Premium Plan</div></div></div>
     </div>
     <div class="testimonial-card">
@@ -619,7 +661,7 @@
     <div class="testimonial-card">
       <div class="quote-mark">"</div>
       <div class="stars">★★★★★</div>
-      <p class="testimonial-text">We started with the Basic plan and it was perfect — light help, great company for Mama. Affordable and so well-organized. Highly recommend SehatSahulat.</p>
+      <p class="testimonial-text">We started with the Basic plan and it was perfect — light help, great company for Mama. Affordable and so well-organized. Highly recommend SehatHifazat.</p>
       <div class="testimonial-author"><div class="author-avatar" style="background:var(--clay);">PH</div><div><div class="author-name">Parveen H.</div><div class="author-relation">Daughter-in-law · Basic Plan</div></div></div>
     </div>
   </div>
@@ -637,7 +679,7 @@
       WhatsApp Us
     </a>
   </div>
-  <p style="margin-top:20px;font-size:14px;color:rgba(255,255,255,0.45);">Or email us at care@sehatsahulat.pk</p>
+  <p style="margin-top:20px;font-size:14px;color:rgba(255,255,255,0.45);">Or email us at care@sehatHifazat.pk</p>
 </section>
 
 <!-- FOOTER -->
@@ -646,9 +688,18 @@
     <div class="footer-brand">
       <a href="#" class="logo" style="color:white;">
         <div class="logo-icon">♡</div>
-        SehatSahulat
+        SehatHifazat
       </a>
       <p>Trusted in-home caregiving services in Pakistan — putting dignity, compassion, and family first.</p>
+      <div class="footer-social-row">
+        <span class="footer-social-label">Follow us:</span>
+        <a href="https://instagram.com/sehatHifazat" target="_blank" class="footer-social-icon instagram" id="fi_instagram" title="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+        <a href="https://facebook.com/sehatHifazat" target="_blank" class="footer-social-icon facebook" id="fi_facebook" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        <a href="https://youtube.com/@sehatHifazat" target="_blank" class="footer-social-icon youtube" id="fi_youtube" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg></a>
+        <a href="https://linkedin.com/company/sehatHifazat" target="_blank" class="footer-social-icon linkedin" id="fi_linkedin" title="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+        <a href="https://x.com/sehatHifazat" target="_blank" class="footer-social-icon x" id="fi_x" title="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="https://wa.me/923000000000" target="_blank" class="footer-social-icon whatsapp" id="fi_whatsapp" title="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.524 5.847L.057 23.882a.5.5 0 00.61.61l6.035-1.467A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.799 9.799 0 01-5.003-1.373l-.36-.213-3.724.905.922-3.63-.234-.374A9.796 9.796 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg></a>
+      </div>
     </div>
     <div>
       <h4>Services</h4>
@@ -673,15 +724,15 @@
       <h4>Contact</h4>
       <ul>
         <li><a href="#">+92-300-0000000</a></li>
-        <li><a href="#">care@sehatsahulat.pk</a></li>
+        <li><a href="#">care@sehatHifazat.pk</a></li>
         <li><a href="#">Karachi Office</a></li>
-        <li><a href="#">Lahore Office</a></li>
+        
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 SehatSahulat. All rights reserved.</span>
-    <span>Privacy Policy · Terms of Service</span>
+    <span>© 2026 SehatHifazat. All rights reserved.</span>
+    <span style="color:rgba(255,255,255,0.35);font-size:12px;">Privacy Policy · Terms of Service</span>
   </div>
 </footer>
 
@@ -692,7 +743,7 @@
   <div class="chat-header">
     <div class="chat-avatar">🤖</div>
     <div class="chat-header-info">
-      <div class="chat-name">SehatSahulat Assistant</div>
+      <div class="chat-name">SehatHifazat Assistant</div>
       <div class="chat-status"><span class="status-dot"></span> Online · AI-powered</div>
     </div>
     <button class="chat-close" onclick="toggleChat()">×</button>
@@ -809,7 +860,7 @@ function loadCustomVideo() {
 document.getElementById('ytUrlInput').addEventListener('keydown', e => { if (e.key === 'Enter') loadCustomVideo(); });
 
 // ===== AI CHAT =====
-// SehatSahulat Smart Chat — works offline, no API needed
+// SehatHifazat Smart Chat — works offline, no API needed
 let messages = [];
 let chatOpen = false;
 
@@ -818,7 +869,7 @@ function toggleChat() {
   const win = document.getElementById('chat-window');
   win.classList.toggle('open', chatOpen);
   if (chatOpen && messages.length === 0) {
-    addBotMessage("Assalam o Alaikum! 👋 I'm the SehatSahulat assistant. I can help you learn about our care packages, services, and how to get started. What would you like to know?");
+    addBotMessage("Assalam o Alaikum! 👋 I'm the SehatHifazat assistant. I can help you learn about our care packages, services, and how to get started. What would you like to know?");
   }
 }
 
@@ -891,7 +942,7 @@ function getSmartReply(text) {
 
   // Greetings
   if (/^(hi|hello|hey|salam|assalam|aoa|good morning|good evening|good afternoon|helo|hii)/.test(t))
-    return "Assalam o Alaikum! 👋 Welcome to SehatSahulat. I'm here to help you find the right care for your loved one. You can ask me about our packages, services, pricing, or how to get started!";
+    return "Assalam o Alaikum! 👋 Welcome to SehatHifazat. I'm here to help you find the right care for your loved one. You can ask me about our packages, services, pricing, or how to get started!";
 
   // Packages overview
   if (/package|plan|offer|option|tier|kaun sa/.test(t) && !/price|cost|kitna|rate/.test(t))
@@ -915,7 +966,7 @@ function getSmartReply(text) {
 
   // Services
   if (/service|care|help|provide|kya karte|kya milega/.test(t))
-    return "SehatSahulat provides these in-home services 🏠:\n\n🧡 Companion Care\n🛁 Personal Care (bathing, grooming)\n💊 Medication Management\n🍲 Meal Preparation\n🏠 Home Management\n🧠 Memory Care (Alzheimer's/Dementia)\n🌙 Overnight Care (Gold plan)\n🏥 Post-Hospital Recovery Care\n\nWhich service do you need help with?";
+    return "SehatHifazat provides these in-home services 🏠:\n\n🧡 Companion Care\n🛁 Personal Care (bathing, grooming)\n💊 Medication Management\n🍲 Meal Preparation\n🏠 Home Management\n🧠 Memory Care (Alzheimer's/Dementia)\n🌙 Overnight Care (Gold plan)\n🏥 Post-Hospital Recovery Care\n\nWhich service do you need help with?";
 
   // Memory / dementia / alzheimer
   if (/memory|dementia|alzheimer|bhulne|bhool/.test(t))
@@ -925,13 +976,13 @@ function getSmartReply(text) {
   if (/overnight|night|raat|24 hour|24\/7|round the clock/.test(t))
     return "🌙 <b>Overnight care</b> is included in our <b>Gold Plan</b> (PKR 65,000/month), which provides a 24/7 live-in caregiver.\n\nThe Premium and Basic plans cover daytime hours only. Would you like details about the Gold plan?";
 
-  // Location / city / Karachi / Lahore
+  // Location / city / Karachi
   if (/karachi|lahore|city|area|location|kahan|where|available/.test(t))
-    return "📍 SehatSahulat currently serves <b>Karachi</b> and <b>Lahore</b>.\n\nWe are expanding to more cities soon! Call <b>+92-300-0000000</b> or WhatsApp us to confirm availability in your specific area.";
+    return "📍 SehatHifazat currently serves <b>Karachi</b> and surrounding areas.\n\nWe are expanding to more cities soon! Call <b>+92-300-0000000</b> or WhatsApp us to confirm availability in your specific area.";
 
   // Contact / call / phone
   if (/contact|call|phone|number|reach|whatsapp|email/.test(t))
-    return "You can reach SehatSahulat through:\n\n📞 <b>Call:</b> +92-300-0000000\n💬 <b>WhatsApp:</b> +92-300-0000000\n📧 <b>Email:</b> care@sehatsahulat.pk\n\nWe're available 7 days a week. Our team will respond within a few hours!";
+    return "You can reach SehatHifazat through:\n\n📞 <b>Call:</b> +92-300-0000000\n💬 <b>WhatsApp:</b> +92-300-0000000\n📧 <b>Email:</b> care@sehatHifazat.pk\n\nWe're available 7 days a week. Our team will respond within a few hours!";
 
   // Get started / consultation / book
   if (/start|begin|book|consult|register|signup|appointment|how to|kaise/.test(t))
@@ -939,7 +990,7 @@ function getSmartReply(text) {
 
   // Caregiver / staff / nurse
   if (/caregiver|nurse|staff|doctor|worker|employ|qualified/.test(t))
-    return "👩‍⚕️ All SehatSahulat caregivers are:\n\n✓ Background verified\n✓ Professionally trained\n✓ Supervised by registered nurses\n✓ Carefully matched to each client\n\nGold plan clients get a <b>dedicated RN coordinator</b>. We take hiring very seriously to ensure your family's safety.";
+    return "👩‍⚕️ All SehatHifazat caregivers are:\n\n✓ Background verified\n✓ Professionally trained\n✓ Supervised by registered nurses\n✓ Carefully matched to each client\n\nGold plan clients get a <b>dedicated RN coordinator</b>. We take hiring very seriously to ensure your family's safety.";
 
   // Insurance / payment
   if (/insurance|payment|installment|advance|easypaisa|jazzcash/.test(t))
@@ -947,14 +998,14 @@ function getSmartReply(text) {
 
   // Thank you
   if (/thank|shukriya|jazakallah|great|perfect|wonderful|helpful/.test(t))
-    return "You're most welcome! 😊 We're here anytime you need us.\n\nFeel free to call us at <b>+92-300-0000000</b> or WhatsApp us if you have more questions. SehatSahulat is always here for your family! 🏠❤️";
+    return "You're most welcome! 😊 We're here anytime you need us.\n\nFeel free to call us at <b>+92-300-0000000</b> or WhatsApp us if you have more questions. SehatHifazat is always here for your family! 🏠❤️";
 
   // Bye
   if (/bye|goodbye|khuda hafiz|allah hafiz|take care/.test(t))
-    return "Allah Hafiz! 👋 Thank you for reaching out to SehatSahulat. Don't hesitate to contact us anytime at <b>+92-300-0000000</b>. Take care! ❤️";
+    return "Allah Hafiz! 👋 Thank you for reaching out to SehatHifazat. Don't hesitate to contact us anytime at <b>+92-300-0000000</b>. Take care! ❤️";
 
   // Default fallback
-  return "Thank you for your message! For detailed information, our care team is ready to help you.\n\n📞 <b>Call:</b> +92-300-0000000\n💬 <b>WhatsApp:</b> +92-300-0000000\n📧 <b>Email:</b> care@sehatsahulat.pk\n\nYou can also ask me about our <b>packages</b>, <b>services</b>, <b>pricing</b>, or <b>how to get started</b>!";
+  return "Thank you for your message! For detailed information, our care team is ready to help you.\n\n📞 <b>Call:</b> +92-300-0000000\n💬 <b>WhatsApp:</b> +92-300-0000000\n📧 <b>Email:</b> care@sehatHifazat.pk\n\nYou can also ask me about our <b>packages</b>, <b>services</b>, <b>pricing</b>, or <b>how to get started</b>!";
 }
 
 // All content visible by default — no reveal hiding

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>SehatSahulat — Admin Panel</title>
+<title>SehatHifazat — Admin Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -227,7 +227,7 @@ input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">♡</div>
-    <div class="login-title">SehatSahulat Admin</div>
+    <div class="login-title">SehatHifazat Admin</div>
     <div class="login-sub">Enter your credentials to access the CMS</div>
 
     <div class="login-error" id="loginError">Incorrect username or password. Please try again.</div>
@@ -248,7 +248,7 @@ input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);
 
     <button class="login-btn" onclick="doLogin()" id="loginBtn">Sign In →</button>
     <div class="login-attempts" id="attemptsMsg"></div>
-    <div class="login-hint">Default: username <span>admin</span> · password <span>sehatsahulat@2026</span></div>
+    <div class="login-hint">Default: username <span>admin</span> · password <span>sehatHifazat@2026</span></div>
   </div>
 </div>
 
@@ -257,7 +257,7 @@ input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);
   <div class="sidebar-brand">
     <div class="brand-icon">♡</div>
     <div>
-      <div class="brand-name">SehatSahulat</div>
+      <div class="brand-name">SehatHifazat</div>
       <div class="brand-sub">Admin Panel</div>
     </div>
   </div>
@@ -302,12 +302,15 @@ input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);
   <button class="nav-item" onclick="showPage('design',this)">
     <span class="nav-icon">🎨</span> Design & Theme
   </button>
+  <button class="nav-item" onclick="showPage('social',this)">
+    <span class="nav-icon">📱</span> Social Media
+  </button>
   <button class="nav-item" onclick="showPage('settings',this)">
     <span class="nav-icon">⚙️</span> Site Settings
   </button>
 
   <div class="sidebar-footer">
-    <a href="sehatsahulat.html" target="_blank" class="site-link" style="margin-bottom:10px">
+    <a href="index.html" target="_blank" class="site-link" style="margin-bottom:10px">
       <span>🔗</span> View Live Site
     </a>
     <button onclick="doLogout()" style="width:100%;background:var(--red-pale);border:1px solid var(--red);color:var(--red);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px;justify-content:center;margin-top:0;transition:all 0.15s" onmouseover="this.style.background='var(--red)';this.style.color='white'" onmouseout="this.style.background='var(--red-pale)';this.style.color='var(--red)'">🔓 Log Out</button>
@@ -321,7 +324,7 @@ input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);
   <div class="topbar">
     <div class="topbar-title" id="topbarTitle">Dashboard</div>
     <div class="topbar-right">
-      <a href="sehatsahulat.html" target="_blank" class="preview-btn">👁 Preview Site</a>
+      <a href="index.html" target="_blank" class="preview-btn">👁 Preview Site</a>
       <button class="save-btn" onclick="saveAll()" id="saveBtn">💾 Save Changes</button>
     </div>
   </div>
@@ -416,7 +419,7 @@ input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);
             </div>
             <div class="form-group full">
               <label>Sub-description</label>
-              <textarea id="hero_sub">SehatSahulat provides trusted, professional in-home caregiving so your loved ones can age with dignity, comfort, and independence — surrounded by everything familiar.</textarea>
+              <textarea id="hero_sub">SehatHifazat provides trusted, professional in-home caregiving so your loved ones can age with dignity, comfort, and independence — surrounded by everything familiar.</textarea>
             </div>
             <div class="form-group">
               <label>Primary Button Text</label>
@@ -659,7 +662,7 @@ input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);
         <div class="card-body">
           <div class="form-grid">
             <div class="form-group"><label>Section Label</label><input type="text" id="vid_label" value="Watch & Learn"/></div>
-            <div class="form-group"><label>Heading</label><input type="text" id="vid_h2" value="See SehatSahulat in action"/></div>
+            <div class="form-group"><label>Heading</label><input type="text" id="vid_h2" value="See SehatHifazat in action"/></div>
             <div class="form-group full"><label>Sub-description</label><textarea id="vid_sub">Watch how our caregivers bring warmth, professionalism, and peace of mind to families across Pakistan every single day.</textarea></div>
           </div>
         </div>
@@ -689,7 +692,7 @@ input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);
             <div class="form-group full"><label>Description</label><textarea id="cta_desc">Schedule a free, no-obligation consultation today. We're here to listen, guide, and help you find the right care package.</textarea></div>
             <div class="form-group"><label>Button Text</label><input type="text" id="cta_btn" value="📞 Call +92-300-0000000"/></div>
             <div class="form-group"><label>Phone Number (href)</label><input type="tel" id="cta_phone" value="+92300000000"/></div>
-            <div class="form-group full"><label>Secondary Text (email line)</label><input type="text" id="cta_secondary" value="Or email us at care@sehatsahulat.pk"/></div>
+            <div class="form-group full"><label>Secondary Text (email line)</label><input type="text" id="cta_secondary" value="Or email us at care@sehatHifazat.pk"/></div>
           </div>
         </div>
       </div>
@@ -699,9 +702,9 @@ input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);
         <div class="card-body">
           <div class="form-grid">
             <div class="form-group"><label>Footer Tagline</label><input type="text" id="footer_tag" value="Trusted in-home caregiving services in Pakistan — putting dignity, compassion, and family first."/></div>
-            <div class="form-group"><label>Copyright Text</label><input type="text" id="footer_copy" value="© 2026 SehatSahulat. All rights reserved."/></div>
+            <div class="form-group"><label>Copyright Text</label><input type="text" id="footer_copy" value="© 2026 SehatHifazat. All rights reserved."/></div>
             <div class="form-group"><label>Office 1</label><input type="text" id="footer_office1" value="Karachi Office"/></div>
-            <div class="form-group"><label>Office 2</label><input type="text" id="footer_office2" value="Lahore Office"/></div>
+            <div class="form-group"><label>Office 2</label><input type="text" id="footer_office2" value=""/></div>
           </div>
         </div>
       </div>
@@ -877,15 +880,99 @@ input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);
       </div>
     </div>
 
+    <!-- ===== SOCIAL MEDIA ===== -->
+    <div class="page" id="page-social">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">📱</span> Social Media Links</div></div>
+        <div class="card-body">
+          <p style="font-size:13px;color:var(--text3);margin-bottom:20px">Update your social media profile URLs below. These appear in both the top bar and the footer of your website. Leave blank to hide an icon.</p>
+
+          <div class="section-divider">Profile URLs</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>📸 Instagram URL</label>
+              <input type="url" id="sm_instagram" value="https://instagram.com/sehatHifazat" placeholder="https://instagram.com/yourpage"/>
+            </div>
+            <div class="form-group">
+              <label>👤 Facebook URL</label>
+              <input type="url" id="sm_facebook" value="https://facebook.com/sehatHifazat" placeholder="https://facebook.com/yourpage"/>
+            </div>
+            <div class="form-group">
+              <label>▶️ YouTube URL</label>
+              <input type="url" id="sm_youtube" value="https://youtube.com/@sehatHifazat" placeholder="https://youtube.com/@yourchannel"/>
+            </div>
+            <div class="form-group">
+              <label>💼 LinkedIn URL</label>
+              <input type="url" id="sm_linkedin" value="https://linkedin.com/company/sehatHifazat" placeholder="https://linkedin.com/company/yourpage"/>
+            </div>
+            <div class="form-group">
+              <label>🐦 X (Twitter) URL</label>
+              <input type="url" id="sm_x" value="https://x.com/sehatHifazat" placeholder="https://x.com/yourhandle"/>
+            </div>
+            <div class="form-group">
+              <label>💬 WhatsApp Number</label>
+              <input type="text" id="sm_whatsapp" value="923000000000" placeholder="923001234567 (no + or spaces)"/>
+              <div class="hint">Enter digits only e.g. 923001234567 — used for wa.me/ link</div>
+            </div>
+          </div>
+
+          <div class="section-divider" style="margin-top:8px">Top Bar Text</div>
+          <div class="form-group">
+            <label>Follow Us Label (shown in top bar)</label>
+            <input type="text" id="sm_topbar_label" value="Follow us on social media"/>
+          </div>
+
+          <div class="section-divider">Visibility</div>
+          <div class="toggle-row">
+            <div class="toggle-info"><div class="tl">Show Top Social Bar</div><div class="td">Display the green bar above the navigation</div></div>
+            <label class="toggle"><input type="checkbox" id="sm_show_topbar" checked/><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><div class="tl">Show Footer Social Icons</div><div class="td">Display social icons in the footer brand section</div></div>
+            <label class="toggle"><input type="checkbox" id="sm_show_footer" checked/><span class="toggle-slider"></span></label>
+          </div>
+
+          <div class="section-divider" style="margin-top:8px">Preview</div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+            <div style="font-size:12px;color:var(--text3);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.08em;">Live Preview</div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap" id="socialPreview">
+              <span style="font-size:12px;color:var(--text2)">Follow us:</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">💡</span> Tips</div></div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:13px;color:var(--text2);padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);border-left:3px solid var(--accent)">
+              <strong style="color:var(--text)">Instagram:</strong> Go to your Instagram profile → copy the URL from your browser (e.g. instagram.com/yourusername)
+            </div>
+            <div style="font-size:13px;color:var(--text2);padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);border-left:3px solid var(--blue)">
+              <strong style="color:var(--text)">Facebook:</strong> Open your Facebook page → copy the URL (e.g. facebook.com/YourPageName)
+            </div>
+            <div style="font-size:13px;color:var(--text2);padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);border-left:3px solid var(--red)">
+              <strong style="color:var(--text)">YouTube:</strong> Go to your YouTube channel → copy the URL from your browser
+            </div>
+            <div style="font-size:13px;color:var(--text2);padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);border-left:3px solid var(--gold)">
+              <strong style="color:var(--text)">WhatsApp:</strong> Enter only your number digits like <code style="background:var(--surface3);padding:2px 6px;border-radius:4px">923001234567</code> (country code + number, no spaces or +)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== SETTINGS ===== -->
     <div class="page" id="page-settings">
       <div class="card">
         <div class="card-header"><div class="card-title"><span class="card-icon">🌐</span> Site Identity</div></div>
         <div class="card-body">
           <div class="form-grid">
-            <div class="form-group"><label>Site Name</label><input type="text" id="site_name" value="SehatSahulat"/></div>
+            <div class="form-group"><label>Site Name</label><input type="text" id="site_name" value="SehatHifazat"/></div>
             <div class="form-group"><label>Site Tagline</label><input type="text" id="site_tagline" value="Home Care Services"/></div>
-            <div class="form-group"><label>Browser Tab Title</label><input type="text" id="site_title" value="SehatSahulat — Home Care Services"/></div>
+            <div class="form-group"><label>Browser Tab Title</label><input type="text" id="site_title" value="SehatHifazat — Home Care Services"/></div>
             <div class="form-group"><label>Logo Emoji / Icon</label><input type="text" id="site_icon" value="♡"/></div>
           </div>
         </div>
@@ -896,7 +983,7 @@ input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);
         <div class="card-body">
           <div class="form-grid">
             <div class="form-group"><label>Phone Number</label><input type="tel" id="contact_phone" value="+92-300-0000000"/></div>
-            <div class="form-group"><label>Email</label><input type="email" id="contact_email" value="care@sehatsahulat.pk"/></div>
+            <div class="form-group"><label>Email</label><input type="email" id="contact_email" value="care@sehatHifazat.pk"/></div>
             <div class="form-group"><label>City / Region</label><input type="text" id="contact_city" value="Karachi, Pakistan"/></div>
             <div class="form-group"><label>WhatsApp Number</label><input type="text" id="contact_wa" value="+923000000000"/></div>
           </div>
@@ -910,17 +997,17 @@ input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);
             <div class="toggle-info"><div class="tl">Enable AI Chat</div><div class="td">Show the AI chat bubble on the website</div></div>
             <label class="toggle"><input type="checkbox" id="ai_enabled" checked/><span class="toggle-slider"></span></label>
           </div>
-          <div class="form-group" style="margin-top:16px"><label>Chat Agent Name</label><input type="text" id="ai_name" value="SehatSahulat Assistant"/></div>
-          <div class="form-group"><label>Welcome Message</label><textarea id="ai_welcome">Assalam o Alaikum! 👋 I'm the SehatSahulat assistant. I can help you learn about our care packages, services, and how to get started. What would you like to know?</textarea></div>
+          <div class="form-group" style="margin-top:16px"><label>Chat Agent Name</label><input type="text" id="ai_name" value="SehatHifazat Assistant"/></div>
+          <div class="form-group"><label>Welcome Message</label><textarea id="ai_welcome">Assalam o Alaikum! 👋 I'm the SehatHifazat assistant. I can help you learn about our care packages, services, and how to get started. What would you like to know?</textarea></div>
           <div class="form-group">
             <label>System Prompt (AI Personality &amp; Knowledge)</label>
-            <textarea id="ai_prompt" style="min-height:160px;font-family:'DM Mono',monospace;font-size:12px">You are a helpful, warm, and professional AI assistant for SehatSahulat — a home care services company in Pakistan. Your job is to help potential clients and their families understand the services, packages, and how to get started.
+            <textarea id="ai_prompt" style="min-height:160px;font-family:'DM Mono',monospace;font-size:12px">You are a helpful, warm, and professional AI assistant for SehatHifazat — a home care services company in Pakistan. Your job is to help potential clients and their families understand the services, packages, and how to get started.
 
 Key information:
 - Services: Companion Care, Personal Care, Medication Management, Meal Preparation, Home Management, Memory Care
 - Basic: PKR 15,000/month · Premium: PKR 35,000/month · Gold: PKR 65,000/month
 - Free consultation for all packages
-- Contact: +92-300-0000000 | care@sehatsahulat.pk
+- Contact: +92-300-0000000 | care@sehatHifazat.pk
 
 Be warm, concise (2-4 sentences), reply in Urdu or English based on user.</textarea>
           </div>
@@ -946,14 +1033,14 @@ Be warm, concise (2-4 sentences), reply in Urdu or English based on user.</texta
 
 <script>
 // ===== DATA STORE =====
-const STORAGE_KEY = 'sehatsahulat_admin';
+const STORAGE_KEY = 'sehatHifazat_admin';
 
 let slides = [
-  {tag:'Trusted Care at Home',title:'Your family deserves compassionate, dignified care',desc:'Professional caregivers available 4 to 24 hours a day, matched to your loved one\'s needs.',btn:'Book Free Consultation',bg:'linear-gradient(135deg,#2c4a3a 0%,#3a6351 40%,#5a8c70 100%)',emoji:'🤲',imgUrl:''},
-  {tag:'Medical Support',title:'Nurse-supervised medication management & health monitoring',desc:'From medication reminders to real-time health tracking — we keep your loved ones safe.',btn:'Explore Services',bg:'linear-gradient(135deg,#4a2c1a 0%,#7a4a2a 40%,#b5623a 100%)',emoji:'💊',imgUrl:''},
-  {tag:'All 3 Packages',title:'Basic, Premium & Gold — a plan for every family',desc:'Starting from PKR 15,000/month. Flexible, transparent, and always tailored to you.',btn:'See Packages',bg:'linear-gradient(135deg,#1a2c4a 0%,#2a4a7a 40%,#3a6ab5 100%)',emoji:'🏠',imgUrl:''},
-  {tag:'Specialized Care',title:'Expert memory care for Alzheimer\'s & dementia patients',desc:'Structured routines, gentle engagement, and a safe environment — every single day.',btn:'Learn More',bg:'linear-gradient(135deg,#3a2a10 0%,#6a4a18 40%,#c9951a 100%)',emoji:'🧠',imgUrl:''},
-  {tag:'2,400+ Families Served',title:'Trusted by families across Karachi & Lahore',desc:'98% satisfaction rate. Background-verified caregivers. 24/7 support line — always here.',btn:'Read Reviews',bg:'linear-gradient(135deg,#2a1a3a 0%,#4a2a6a 40%,#7a4ab5 100%)',emoji:'👨‍👩‍👧‍👦',imgUrl:''}
+  {tag:'Trusted Care at Home',title:'Your family deserves compassionate, dignified care',desc:'Professional caregivers available 4 to 24 hours a day, matched to your loved one\'s needs.',btn:'Book Free Consultation',bg:'linear-gradient(135deg,#2c4a3a 0%,#3a6351 40%,#5a8c70 100%)',emoji:'🤲',imgUrl:'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=1600&q=80&fit=crop'},
+  {tag:'Medical Support',title:'Nurse-supervised medication management & health monitoring',desc:'From medication reminders to real-time health tracking — we keep your loved ones safe.',btn:'Explore Services',bg:'linear-gradient(135deg,#4a2c1a 0%,#7a4a2a 40%,#b5623a 100%)',emoji:'💊',imgUrl:'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&q=80&fit=crop'},
+  {tag:'All 3 Packages',title:'Basic, Premium & Gold — a plan for every family',desc:'Starting from PKR 15,000/month. Flexible, transparent, and always tailored to you.',btn:'See Packages',bg:'linear-gradient(135deg,#1a2c4a 0%,#2a4a7a 40%,#3a6ab5 100%)',emoji:'🏠',imgUrl:'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1600&q=80&fit=crop'},
+  {tag:'Specialized Care',title:'Expert memory care for Alzheimer\'s & dementia patients',desc:'Structured routines, gentle engagement, and a safe environment — every single day.',btn:'Learn More',bg:'linear-gradient(135deg,#3a2a10 0%,#6a4a18 40%,#c9951a 100%)',emoji:'🧠',imgUrl:'https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=1600&q=80&fit=crop'},
+  {tag:'2,400+ Families Served',title:'Trusted by families across Karachi',desc:'98% satisfaction rate. Background-verified caregivers. 24/7 support line — always here.',btn:'Read Reviews',bg:'linear-gradient(135deg,#2a1a3a 0%,#4a2a6a 40%,#7a4ab5 100%)',emoji:'👨‍👩‍👧‍👦',imgUrl:'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=1600&q=80&fit=crop'}
 ];
 
 let services = [
@@ -966,9 +1053,9 @@ let services = [
 ];
 
 let testimonials = [
-  {name:'Lubna M.',relation:'Daughter of client · Premium Plan',text:'The caregiver assigned to my mother has become part of our family. She\'s patient, genuinely caring, and my mother looks forward to her visits. SehatSahulat truly lives up to its name.',stars:5,initials:'LM',color:'#B5623A'},
+  {name:'Lubna M.',relation:'Daughter of client · Premium Plan',text:'The caregiver assigned to my mother has become part of our family. She\'s patient, genuinely caring, and my mother looks forward to her visits. SehatHifazat truly lives up to its name.',stars:5,initials:'LM',color:'#B5623A'},
   {name:'Rizwan K.',relation:'Son of client · Gold Plan',text:'After my father\'s surgery, we chose the Gold plan. The dedicated nurse coordinator gave us real peace of mind. The 24/7 coverage is absolutely worth it.',stars:5,initials:'RK',color:'#3A6351'},
-  {name:'Parveen H.',relation:'Daughter-in-law · Basic Plan',text:'We started with the Basic plan and it was perfect — light help, great company for Mama. Affordable and so well-organized. Highly recommend SehatSahulat.',stars:5,initials:'PH',color:'#C8A882'}
+  {name:'Parveen H.',relation:'Daughter-in-law · Basic Plan',text:'We started with the Basic plan and it was perfect — light help, great company for Mama. Affordable and so well-organized. Highly recommend SehatHifazat.',stars:5,initials:'PH',color:'#C8A882'}
 ];
 
 let playlist = [
@@ -1375,7 +1462,7 @@ function exportData() {
   const blob = new Blob([data],{type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'sehatsahulat-data.json';
+  a.download = 'sehatHifazat-data.json';
   a.click();
   showToast('Data exported!');
 }
@@ -1430,7 +1517,7 @@ function logActivity(msg) {
 // ===== AUTH =====
 const AUTH_KEY = 'ss_admin_auth';
 const LOCK_KEY = 'ss_admin_lock';
-const CREDS = { user: 'admin', pass: 'sehatsahulat@2026' };
+const CREDS = { user: 'admin', pass: 'sehatHifazat@2026' };
 const MAX_ATTEMPTS = 5;
 const LOCK_MINUTES = 5;
 
