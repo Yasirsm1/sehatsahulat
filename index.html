@@ -206,6 +206,8 @@
   /* SCROLL REVEAL */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
+  /* Fallback: if JS doesn't run, show everything */
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
 
   /* ===== AI CHAT WIDGET ===== */
   #chat-bubble {
@@ -839,7 +841,9 @@ function addBotMessage(text) {
   const container = document.getElementById('chat-messages');
   const div = document.createElement('div');
   div.className = 'msg bot';
-  div.innerHTML = `<div class="msg-avatar">🤖</div><div class="msg-bubble">${text}</div>`;
+  // Render newlines and bold tags
+  const formatted = text.replace(/\n/g, '<br/>');
+  div.innerHTML = `<div class="msg-avatar">🤖</div><div class="msg-bubble" style="white-space:normal">${formatted}</div>`;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }
@@ -888,41 +892,116 @@ async function sendUserMessage(text) {
   showTyping();
   document.getElementById('chat-send').disabled = true;
 
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 400,
-        system: SYSTEM_PROMPT,
-        messages: messages
-      })
-    });
-    const data = await resp.json();
-    const reply = data.content && data.content[0] ? data.content[0].text : "Sorry, I couldn't get a response right now. Please call us at +92-300-0000000.";
-    messages.push({ role: 'assistant', content: reply });
-    removeTyping();
-    addBotMessage(reply);
-  } catch (e) {
-    removeTyping();
-    addBotMessage("Apologies, I'm having a connection issue. Please call us at +92-300-0000000 or email care@sehatsahulat.pk for immediate help.");
-  }
+  // Smart local AI — works on GitHub Pages without any backend
+  await new Promise(r => setTimeout(r, 700 + Math.random() * 600));
+  const reply = getSmartReply(text);
+  messages.push({ role: 'assistant', content: reply });
+  removeTyping();
+  addBotMessage(reply);
   document.getElementById('chat-send').disabled = false;
 }
 
-// Scroll reveal
+function getSmartReply(text) {
+  const t = text.toLowerCase();
+
+  // Greetings
+  if (/^(hi|hello|hey|salam|assalam|aoa|good morning|good evening|good afternoon|helo|hii)/.test(t))
+    return "Assalam o Alaikum! 👋 Welcome to SehatSahulat. I'm here to help you find the right care for your loved one. You can ask me about our packages, services, pricing, or how to get started!";
+
+  // Packages overview
+  if (/package|plan|offer|option|tier|kaun sa/.test(t) && !/price|cost|kitna|rate/.test(t))
+    return "We have 3 care packages 📦:\n\n🟤 <b>Basic</b> — PKR 15,000/month · 4 hrs/day, companion care, light housekeeping\n\n🌿 <b>Premium</b> — PKR 35,000/month · 8 hrs/day, all meals, nursing assessments\n\n🥇 <b>Gold</b> — PKR 65,000/month · 24/7 live-in caregiver, dedicated RN, physiotherapy\n\nAll plans include a <b>free consultation</b>! Which one interests you?";
+
+  // Basic plan
+  if (/basic/.test(t))
+    return "🟤 <b>Sahulat Basic — PKR 15,000/month</b>\n\n✓ 4 hrs/day caregiver (5 days/week)\n✓ Companion & emotional support\n✓ Light housekeeping & errands\n✓ 1 meal/day preparation\n✓ Medication reminders\n✓ Weekly health report\n\nIdeal for seniors who need light assistance. Call <b>+92-300-0000000</b> to book a free consultation!";
+
+  // Premium plan
+  if (/premium/.test(t))
+    return "🌿 <b>Sahulat Premium — PKR 35,000/month</b>\n\n✓ 8 hrs/day caregiver (6 days/week)\n✓ All meals prepared (3/day)\n✓ Full housekeeping & laundry\n✓ Medication management & tracking\n✓ Bi-weekly nursing assessment\n✓ Doctor transport included\n✓ Daily digital health report\n\nOur most popular plan! Call <b>+92-300-0000000</b> to get started.";
+
+  // Gold plan
+  if (/gold/.test(t))
+    return "🥇 <b>Sahulat Gold — PKR 65,000/month</b>\n\n✓ 24/7 live-in caregiver\n✓ Overnight care included\n✓ Dedicated RN coordinator\n✓ Weekly physiotherapy sessions\n✓ Doctor coordination & transport\n✓ Real-time health monitoring app\n✓ Monthly family progress meeting\n\nOur premium all-inclusive plan. Call <b>+92-300-0000000</b> for details!";
+
+  // Price / cost
+  if (/price|cost|kitna|rate|fee|charges|amount|rupee|pkr/.test(t))
+    return "Our packages are priced as follows 💰:\n\n🟤 <b>Basic</b> — PKR 15,000 / month\n🌿 <b>Premium</b> — PKR 35,000 / month\n🥇 <b>Gold</b> — PKR 65,000 / month\n\nAll include a <b>free initial consultation</b>. We also offer flexible payment options. Want to discuss which plan fits your budget?";
+
+  // Services
+  if (/service|care|help|provide|kya karte|kya milega/.test(t))
+    return "SehatSahulat provides these in-home services 🏠:\n\n🧡 Companion Care\n🛁 Personal Care (bathing, grooming)\n💊 Medication Management\n🍲 Meal Preparation\n🏠 Home Management\n🧠 Memory Care (Alzheimer's/Dementia)\n🌙 Overnight Care (Gold plan)\n🏥 Post-Hospital Recovery Care\n\nWhich service do you need help with?";
+
+  // Memory / dementia / alzheimer
+  if (/memory|dementia|alzheimer|bhulne|bhool/.test(t))
+    return "🧠 We have specialized <b>Memory Care</b> services for patients with Alzheimer's or dementia.\n\nOur caregivers are trained to create structured routines, gentle engagement, and a calm & safe environment every day.\n\nThis is available in our <b>Premium</b> and <b>Gold</b> plans. Call <b>+92-300-0000000</b> for a free assessment.";
+
+  // Overnight
+  if (/overnight|night|raat|24 hour|24\/7|round the clock/.test(t))
+    return "🌙 <b>Overnight care</b> is included in our <b>Gold Plan</b> (PKR 65,000/month), which provides a 24/7 live-in caregiver.\n\nThe Premium and Basic plans cover daytime hours only. Would you like details about the Gold plan?";
+
+  // Location / city / Karachi / Lahore
+  if (/karachi|lahore|city|area|location|kahan|where|available/.test(t))
+    return "📍 SehatSahulat currently serves <b>Karachi</b> and <b>Lahore</b>.\n\nWe are expanding to more cities soon! Call <b>+92-300-0000000</b> or WhatsApp us to confirm availability in your specific area.";
+
+  // Contact / call / phone
+  if (/contact|call|phone|number|reach|whatsapp|email/.test(t))
+    return "You can reach SehatSahulat through:\n\n📞 <b>Call:</b> +92-300-0000000\n💬 <b>WhatsApp:</b> +92-300-0000000\n📧 <b>Email:</b> care@sehatsahulat.pk\n\nWe're available 7 days a week. Our team will respond within a few hours!";
+
+  // Get started / consultation / book
+  if (/start|begin|book|consult|register|signup|appointment|how to|kaise/.test(t))
+    return "Getting started is simple! 🌟\n\n<b>Step 1</b> — Call us for a free consultation: <b>+92-300-0000000</b>\n<b>Step 2</b> — We create a custom care plan for your loved one\n<b>Step 3</b> — We match you with the perfect caregiver\n<b>Step 4</b> — Care begins on your schedule!\n\nNo commitment required for the consultation. Shall I help you with anything else?";
+
+  // Caregiver / staff / nurse
+  if (/caregiver|nurse|staff|doctor|worker|employ|qualified/.test(t))
+    return "👩‍⚕️ All SehatSahulat caregivers are:\n\n✓ Background verified\n✓ Professionally trained\n✓ Supervised by registered nurses\n✓ Carefully matched to each client\n\nGold plan clients get a <b>dedicated RN coordinator</b>. We take hiring very seriously to ensure your family's safety.";
+
+  // Insurance / payment
+  if (/insurance|payment|installment|advance|easypaisa|jazzcash/.test(t))
+    return "💳 We offer <b>flexible payment options</b> for all plans.\n\nFor payment method details, installment plans, or insurance queries — please call us directly at <b>+92-300-0000000</b> and our team will guide you.";
+
+  // Thank you
+  if (/thank|shukriya|jazakallah|great|perfect|wonderful|helpful/.test(t))
+    return "You're most welcome! 😊 We're here anytime you need us.\n\nFeel free to call us at <b>+92-300-0000000</b> or WhatsApp us if you have more questions. SehatSahulat is always here for your family! 🏠❤️";
+
+  // Bye
+  if (/bye|goodbye|khuda hafiz|allah hafiz|take care/.test(t))
+    return "Allah Hafiz! 👋 Thank you for reaching out to SehatSahulat. Don't hesitate to contact us anytime at <b>+92-300-0000000</b>. Take care! ❤️";
+
+  // Default fallback
+  return "Thank you for your message! For detailed information, our care team is ready to help you.\n\n📞 <b>Call:</b> +92-300-0000000\n💬 <b>WhatsApp:</b> +92-300-0000000\n📧 <b>Email:</b> care@sehatsahulat.pk\n\nYou can also ask me about our <b>packages</b>, <b>services</b>, <b>pricing</b>, or <b>how to get started</b>!";
+}
+
+// Scroll reveal — with immediate fallback
 const reveals = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach((e, i) => {
-    if (e.isIntersecting) {
-      e.target.style.transitionDelay = (i % 4) * 80 + 'ms';
-      e.target.classList.add('visible');
-      io.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.1 });
-reveals.forEach(el => io.observe(el));
+// Show all immediately first (prevents invisible content)
+reveals.forEach(el => el.classList.add('visible'));
+// Then re-apply animation for those not yet in view
+reveals.forEach(el => {
+  el.classList.remove('visible');
+  el.style.opacity = '0';
+});
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.style.transitionDelay = (i % 4) * 80 + 'ms';
+        e.target.classList.add('visible');
+        e.target.style.opacity = '';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => io.observe(el));
+} else {
+  // Browser doesn't support IntersectionObserver — show everything
+  reveals.forEach(el => { el.classList.add('visible'); el.style.opacity = ''; });
+}
+
+// Safety net: after 2s, force-show anything still hidden
+setTimeout(() => {
+  reveals.forEach(el => { el.classList.add('visible'); el.style.opacity = ''; });
+}, 2000);
 </script>
 </body>
 </html>
