@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>SehatSahulat — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#181c27;--surface2:#1e2334;--surface3:#242840;
+  --border:#2a2f45;--border2:#353b56;
+  --accent:#3a9e74;--accent2:#2d7d5c;--accent-pale:rgba(58,158,116,0.12);
+  --gold:#c9951a;--gold-pale:rgba(201,149,26,0.12);
+  --rust:#b5623a;--rust-pale:rgba(181,98,58,0.12);
+  --blue:#3a7eb5;--blue-pale:rgba(58,126,181,0.12);
+  --red:#e24b4a;--red-pale:rgba(226,75,74,0.1);
+  --text:#e8eaf0;--text2:#9aa0b8;--text3:#5a6080;
+  --radius:10px;--radius-sm:6px;
+  --sidebar:260px;
+}
+html{font-family:'DM Sans',sans-serif;font-size:14px;background:var(--bg);color:var(--text);line-height:1.5}
+body{display:flex;min-height:100vh;overflow-x:hidden}
+
+/* LOGIN SCREEN */
+#loginScreen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:48px 40px;width:100%;max-width:400px;text-align:center}
+.login-logo{width:56px;height:56px;background:var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 20px}
+.login-title{font-size:22px;font-weight:600;color:var(--text);margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--text3);margin-bottom:32px}
+.login-field{position:relative;margin-bottom:16px;text-align:left}
+.login-field label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px}
+.login-field input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 44px 12px 14px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s}
+.login-field input:focus{border-color:var(--accent)}
+.login-field .eye-btn{position:absolute;right:12px;bottom:12px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;line-height:1;padding:0}
+.login-field .eye-btn:hover{color:var(--text)}
+.login-btn{width:100%;background:var(--accent);color:white;border:none;padding:13px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;margin-top:4px}
+.login-btn:hover{background:var(--accent2)}
+.login-error{background:var(--red-pale);border:1px solid var(--red);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:16px;display:none}
+.login-error.show{display:block}
+.login-attempts{font-size:12px;color:var(--text3);margin-top:14px}
+.login-hint{font-size:11px;color:var(--text3);margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.login-hint span{color:var(--accent);font-weight:500}
+.locked-msg{background:var(--red-pale);border:1px solid var(--red);border-radius:8px;padding:14px;font-size:13px;color:var(--red);text-align:center;display:none}
+.locked-msg.show{display:block}
+.locked-countdown{font-weight:600;font-size:15px;margin-top:6px}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:100;overflow-y:auto}
+.sidebar-brand{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.brand-icon{width:34px;height:34px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.brand-name{font-size:15px;font-weight:600;color:var(--text)}
+.brand-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.sidebar-section{padding:16px 12px 8px;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 14px;margin:1px 8px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;color:var(--text2);transition:all 0.15s;border:none;background:none;width:calc(100% - 16px);text-align:left}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--accent-pale);color:var(--accent);font-weight:500}
+.nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--accent);color:white;font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px}
+.sidebar-footer{margin-top:auto;padding:16px;border-top:1px solid var(--border)}
+.site-link{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--accent-pale);border:1px solid rgba(58,158,116,0.2);border-radius:var(--radius-sm);color:var(--accent);font-size:13px;text-decoration:none;font-weight:500;transition:background 0.15s}
+.site-link:hover{background:rgba(58,158,116,0.2)}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:16px;font-weight:600;color:var(--text)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.save-btn{background:var(--accent);color:white;border:none;padding:9px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;transition:background 0.15s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:7px}
+.save-btn:hover{background:var(--accent2)}
+.save-btn.saving{opacity:0.7;pointer-events:none}
+.preview-btn{background:var(--surface2);border:1px solid var(--border2);color:var(--text2);padding:9px 16px;border-radius:var(--radius-sm);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px;text-decoration:none;transition:all 0.15s}
+.preview-btn:hover{border-color:var(--accent);color:var(--accent)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--accent);color:white;padding:12px 20px;border-radius:var(--radius);font-size:13px;font-weight:500;z-index:9999;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none;display:flex;align-items:center;gap:8px}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.error{background:var(--red)}
+
+/* CONTENT */
+.content{padding:28px;flex:1}
+.page{display:none}
+.page.active{display:block}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:20px;overflow:hidden}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:14px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+.card-body{padding:20px}
+.card-icon{font-size:18px}
+
+/* DASHBOARD */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.stat-val{font-size:28px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace}
+.stat-lbl{font-size:12px;color:var(--text3)}
+.stat-change{font-size:11px;margin-top:8px;color:var(--accent)}
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.activity-text{font-size:13px;color:var(--text2);line-height:1.5}
+.activity-time{font-size:11px;color:var(--text3);margin-top:3px}
+
+/* FORMS */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:16px}
+.form-group.full{grid-column:1/-1}
+label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px;letter-spacing:0.02em}
+input[type=text],input[type=url],input[type=tel],input[type=email],input[type=number],textarea,select{
+  width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:9px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;
+  outline:none;transition:border-color 0.15s;resize:vertical
+}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+textarea{min-height:80px}
+select option{background:var(--surface2)}
+.hint{font-size:11px;color:var(--text3);margin-top:5px}
+.color-row{display:flex;gap:8px;align-items:center}
+input[type=color]{width:40px;height:34px;padding:2px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0}
+.tab{padding:9px 16px;cursor:pointer;font-size:13px;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',sans-serif}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* SLIDE ITEMS */
+.slide-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;position:relative}
+.slide-item-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.slide-num{width:26px;height:26px;background:var(--accent-pale);color:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.slide-label{font-size:13px;font-weight:500;color:var(--text)}
+.slide-actions{margin-left:auto;display:flex;gap:6px}
+.icon-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text3);font-size:13px;transition:all 0.15s}
+.icon-btn:hover{border-color:var(--border2);color:var(--text)}
+.icon-btn.danger:hover{border-color:var(--red);color:var(--red);background:var(--red-pale)}
+.icon-btn.success:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-pale)}
+.slide-preview{width:100%;height:80px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:12px;position:relative;overflow:hidden}
+.slide-preview-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:6px}
+
+/* SERVICE ITEMS */
+.service-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px}
+.service-row{display:grid;grid-template-columns:60px 1fr 2fr auto;gap:12px;align-items:center}
+
+/* PRICING ITEMS */
+.pricing-tabs{display:flex;gap:10px;margin-bottom:20px}
+.plan-tab{padding:8px 20px;border-radius:var(--radius-sm);border:1px solid var(--border);background:none;color:var(--text2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.plan-tab.active{background:var(--accent-pale);border-color:var(--accent);color:var(--accent)}
+.feature-item{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.feature-item input[type=text]{flex:1}
+.feature-toggle{background:var(--surface3);border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:11px;color:var(--text3);cursor:pointer;white-space:nowrap}
+.feature-toggle.included{background:var(--accent-pale);border-color:var(--accent);color:var(--accent)}
+
+/* TESTIMONIAL ITEMS */
+.test-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+
+/* IMAGE UPLOAD */
+.img-upload{border:2px dashed var(--border);border-radius:var(--radius);padding:24px;text-align:center;cursor:pointer;transition:border-color 0.2s;position:relative}
+.img-upload:hover{border-color:var(--accent)}
+.img-upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-upload-icon{font-size:28px;margin-bottom:8px;color:var(--text3)}
+.img-upload p{font-size:13px;color:var(--text3)}
+.img-upload p span{color:var(--accent)}
+.img-preview{width:100%;max-height:140px;object-fit:cover;border-radius:var(--radius-sm);margin-top:10px;display:none}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+.toggle-row:last-child{border-bottom:none}
+.toggle-info .tl{font-size:13px;font-weight:500;color:var(--text)}
+.toggle-info .td{font-size:12px;color:var(--text3);margin-top:2px}
+.toggle{position:relative;width:40px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--surface3);border-radius:11px;cursor:pointer;transition:0.2s}
+.toggle-slider::before{content:'';position:absolute;height:16px;width:16px;left:3px;top:3px;background:var(--text3);border-radius:50%;transition:0.2s}
+.toggle input:checked + .toggle-slider{background:var(--accent)}
+.toggle input:checked + .toggle-slider::before{transform:translateX(18px);background:white}
+
+/* COLORS */
+.theme-colors{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.color-field{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;display:flex;align-items:center;gap:10px}
+.color-swatch{width:32px;height:32px;border-radius:6px;border:1px solid var(--border);flex-shrink:0}
+.color-info .cn{font-size:12px;font-weight:500;color:var(--text)}
+.color-info .cv{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+
+/* SECTION MANAGER */
+.section-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:grab}
+.section-item:active{cursor:grabbing}
+.drag-handle{color:var(--text3);font-size:16px;cursor:grab}
+.section-name{font-size:13px;font-weight:500;color:var(--text);flex:1}
+.section-status{font-size:11px;padding:3px 9px;border-radius:10px}
+.section-status.visible{background:var(--accent-pale);color:var(--accent)}
+.section-status.hidden{background:var(--red-pale);color:var(--red)}
+
+/* MEDIA GRID */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.media-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;transition:border-color 0.15s;position:relative}
+.media-item:hover{border-color:var(--accent)}
+.media-item.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-pale)}
+.media-thumb{width:100%;height:90px;object-fit:cover;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--text3)}
+.media-name{font-size:11px;color:var(--text2);padding:7px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.media-del{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.6);border:none;color:white;width:22px;height:22px;border-radius:4px;font-size:12px;cursor:pointer;display:none;align-items:center;justify-content:center}
+.media-item:hover .media-del{display:flex}
+
+/* UTIL */
+.flex{display:flex;align-items:center}
+.gap-8{gap:8px}
+.gap-12{gap:12px}
+.ml-auto{margin-left:auto}
+.add-btn{background:var(--surface2);border:1px dashed var(--border2);border-radius:var(--radius-sm);padding:10px 16px;font-size:13px;color:var(--text3);cursor:pointer;width:100%;text-align:center;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.add-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-pale)}
+.danger-btn{background:var(--red-pale);border:1px solid var(--red);color:var(--red);border-radius:var(--radius-sm);padding:8px 14px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.danger-btn:hover{background:var(--red);color:white}
+.section-divider{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin:20px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.row{display:flex;gap:12px}
+.row > *{flex:1}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
+.badge.green{background:var(--accent-pale);color:var(--accent)}
+.badge.gold{background:var(--gold-pale);color:var(--gold)}
+.badge.red{background:var(--red-pale);color:var(--red)}
+.badge.blue{background:var(--blue-pale);color:var(--blue)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">♡</div>
+    <div class="login-title">SehatSahulat Admin</div>
+    <div class="login-sub">Enter your credentials to access the CMS</div>
+
+    <div class="login-error" id="loginError">Incorrect username or password. Please try again.</div>
+    <div class="locked-msg" id="lockedMsg">
+      🔒 Too many failed attempts. Access locked for:
+      <div class="locked-countdown" id="lockedCountdown">5:00</div>
+    </div>
+
+    <div class="login-field" id="loginFields">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Enter username" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <div class="login-field" id="loginPassField">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <button class="eye-btn" onclick="togglePwd()" id="eyeBtn">👁</button>
+    </div>
+
+    <button class="login-btn" onclick="doLogin()" id="loginBtn">Sign In →</button>
+    <div class="login-attempts" id="attemptsMsg"></div>
+    <div class="login-hint">Default: username <span>admin</span> · password <span>sehatsahulat@2026</span></div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">♡</div>
+    <div>
+      <div class="brand-name">SehatSahulat</div>
+      <div class="brand-sub">Admin Panel</div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">Overview</div>
+  <button class="nav-item active" onclick="showPage('dashboard',this)">
+    <span class="nav-icon">📊</span> Dashboard
+  </button>
+
+  <div class="sidebar-section">Content</div>
+  <button class="nav-item" onclick="showPage('hero',this)">
+    <span class="nav-icon">🏠</span> Hero Section
+  </button>
+  <button class="nav-item" onclick="showPage('slider',this)">
+    <span class="nav-icon">🖼️</span> Image Slider
+    <span class="nav-badge">5</span>
+  </button>
+  <button class="nav-item" onclick="showPage('services',this)">
+    <span class="nav-icon">🧡</span> Services
+    <span class="nav-badge">6</span>
+  </button>
+  <button class="nav-item" onclick="showPage('pricing',this)">
+    <span class="nav-icon">💳</span> Packages & Pricing
+  </button>
+  <button class="nav-item" onclick="showPage('testimonials',this)">
+    <span class="nav-icon">⭐</span> Testimonials
+  </button>
+  <button class="nav-item" onclick="showPage('video',this)">
+    <span class="nav-icon">🎬</span> Video Section
+  </button>
+  <button class="nav-item" onclick="showPage('cta',this)">
+    <span class="nav-icon">📞</span> CTA & Contact
+  </button>
+
+  <div class="sidebar-section">Site</div>
+  <button class="nav-item" onclick="showPage('media',this)">
+    <span class="nav-icon">🗂️</span> Media Library
+  </button>
+  <button class="nav-item" onclick="showPage('pages',this)">
+    <span class="nav-icon">📄</span> Page Manager
+  </button>
+  <button class="nav-item" onclick="showPage('design',this)">
+    <span class="nav-icon">🎨</span> Design & Theme
+  </button>
+  <button class="nav-item" onclick="showPage('settings',this)">
+    <span class="nav-icon">⚙️</span> Site Settings
+  </button>
+
+  <div class="sidebar-footer">
+    <a href="sehatsahulat.html" target="_blank" class="site-link" style="margin-bottom:10px">
+      <span>🔗</span> View Live Site
+    </a>
+    <button onclick="doLogout()" style="width:100%;background:var(--red-pale);border:1px solid var(--red);color:var(--red);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px;justify-content:center;margin-top:0;transition:all 0.15s" onmouseover="this.style.background='var(--red)';this.style.color='white'" onmouseout="this.style.background='var(--red-pale)';this.style.color='var(--red)'">🔓 Log Out</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <div class="topbar-right">
+      <a href="sehatsahulat.html" target="_blank" class="preview-btn">👁 Preview Site</a>
+      <button class="save-btn" onclick="saveAll()" id="saveBtn">💾 Save Changes</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-val" id="d-sections">8</div>
+          <div class="stat-lbl">Active Sections</div>
+          <div class="stat-change">↑ All visible</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="d-slides">5</div>
+          <div class="stat-lbl">Slider Images</div>
+          <div class="stat-change">↑ Auto-rotating</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="d-media">0</div>
+          <div class="stat-lbl">Media Files</div>
+          <div class="stat-change">Upload images below</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">PKR</div>
+          <div class="stat-lbl">Currency</div>
+          <div class="stat-change">3 active packages</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="card-icon">📋</span> Quick Edit Shortcuts</div>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="add-btn" style="text-align:left;padding:12px 16px" onclick="showPage('hero',document.querySelector('[onclick*=hero]'))">✏️ &nbsp;Edit Hero Headline & Description</button>
+              <button class="add-btn" style="text-align:left;padding:12px 16px" onclick="showPage('slider',document.querySelector('[onclick*=slider]'))">🖼️ &nbsp;Manage Slider Images & Text</button>
+              <button class="add-btn" style="text-align:left;padding:12px 16px" onclick="showPage('pricing',document.querySelector('[onclick*=pricing]'))">💳 &nbsp;Update Package Prices</button>
+              <button class="add-btn" style="text-align:left;padding:12px 16px" onclick="showPage('design',document.querySelector('[onclick*=design]'))">🎨 &nbsp;Change Colors & Theme</button>
+              <button class="add-btn" style="text-align:left;padding:12px 16px" onclick="showPage('settings',document.querySelector('[onclick*=settings]'))">⚙️ &nbsp;Update Contact Info</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="card-icon">🕐</span> Recent Changes</div>
+          </div>
+          <div class="card-body" id="activityLog">
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--accent)"></div>
+              <div><div class="activity-text">Admin panel loaded — ready to edit</div><div class="activity-time">Just now</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--gold)"></div>
+              <div><div class="activity-text">Website data loaded from storage</div><div class="activity-time">Just now</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-header">
+          <div class="card-title"><span class="card-icon">📄</span> Page Sections Overview</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px" id="sectionOverview"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== HERO ===== -->
+    <div class="page" id="page-hero">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">🏠</span> Hero Section</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Badge Text</label>
+              <input type="text" id="hero_badge" value="Licensed &amp; Insured Caregivers"/>
+            </div>
+            <div class="form-group full">
+              <label>Main Headline</label>
+              <input type="text" id="hero_h1" value="Compassionate care, right at home"/>
+            </div>
+            <div class="form-group full">
+              <label>Headline Italic/Accent Word</label>
+              <input type="text" id="hero_h1em" value="right at home"/>
+              <div class="hint">This part will appear in accent color (italic)</div>
+            </div>
+            <div class="form-group full">
+              <label>Sub-description</label>
+              <textarea id="hero_sub">SehatSahulat provides trusted, professional in-home caregiving so your loved ones can age with dignity, comfort, and independence — surrounded by everything familiar.</textarea>
+            </div>
+            <div class="form-group">
+              <label>Primary Button Text</label>
+              <input type="text" id="hero_btn1" value="Schedule a Free Consultation"/>
+            </div>
+            <div class="form-group">
+              <label>Secondary Button Text</label>
+              <input type="text" id="hero_btn2" value="View Packages →"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">👩‍⚕️</span> Caregiver Card</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Caregiver Name</label>
+              <input type="text" id="cg_name" value="Dr. Ayesha R., RN"/>
+            </div>
+            <div class="form-group">
+              <label>Caregiver Role</label>
+              <input type="text" id="cg_role" value="Senior Caregiver · 12 yrs experience"/>
+            </div>
+            <div class="form-group">
+              <label>Rating</label>
+              <input type="text" id="cg_rating" value="★ 4.97"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">📈</span> Stats Bar</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Stat 1 Number</label><input type="text" id="stat1_num" value="2,400+"/></div>
+            <div class="form-group"><label>Stat 1 Label</label><input type="text" id="stat1_lbl" value="Families Served"/></div>
+            <div class="form-group"><label>Stat 2 Number</label><input type="text" id="stat2_num" value="98%"/></div>
+            <div class="form-group"><label>Stat 2 Label</label><input type="text" id="stat2_lbl" value="Satisfaction Rate"/></div>
+            <div class="form-group"><label>Stat 3 Number</label><input type="text" id="stat3_num" value="24/7"/></div>
+            <div class="form-group"><label>Stat 3 Label</label><input type="text" id="stat3_lbl" value="On-Call Support"/></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">🛡️</span> Trust Bar Items</div></div>
+        <div class="card-body" id="trustBarEditor">
+          <div class="form-grid">
+            <div class="form-group"><label>Trust Item 1</label><input type="text" id="trust1" value="Background Verified Caregivers"/></div>
+            <div class="form-group"><label>Trust Item 2</label><input type="text" id="trust2" value="Personalized Care Plans"/></div>
+            <div class="form-group"><label>Trust Item 3</label><input type="text" id="trust3" value="Nurse-Supervised Services"/></div>
+            <div class="form-group"><label>Trust Item 4</label><input type="text" id="trust4" value="Flexible Payment Options"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SLIDER ===== -->
+    <div class="page" id="page-slider">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-icon">🖼️</span> Image Slider — 5 Slides</div>
+          <button class="add-btn" style="width:auto;padding:7px 14px" onclick="addSlide()">+ Add Slide</button>
+        </div>
+        <div class="card-body" id="slidesContainer">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">⚙️</span> Slider Settings</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Auto-play Interval (seconds)</label>
+              <input type="number" id="slide_interval" value="5" min="2" max="30"/>
+            </div>
+            <div class="form-group">
+              <label>Slider Height</label>
+              <select id="slide_height">
+                <option value="420px">Small (420px)</option>
+                <option value="560px" selected>Medium (560px)</option>
+                <option value="680px">Large (680px)</option>
+                <option value="100vh">Full Screen</option>
+              </select>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><div class="tl">Auto-play</div><div class="td">Automatically advance slides</div></div>
+            <label class="toggle"><input type="checkbox" id="slide_autoplay" checked/><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><div class="tl">Show dots navigation</div><div class="td">Show dot indicators below slider</div></div>
+            <label class="toggle"><input type="checkbox" id="slide_dots" checked/><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><div class="tl">Show arrow buttons</div><div class="td">Show prev/next arrow controls</div></div>
+            <label class="toggle"><input type="checkbox" id="slide_arrows" checked/><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SERVICES ===== -->
+    <div class="page" id="page-services">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">📝</span> Section Header</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Section Label</label><input type="text" id="svc_label" value="What We Offer"/></div>
+            <div class="form-group"><label>Heading</label><input type="text" id="svc_h2" value="Every kind of care, tailored for every person"/></div>
+            <div class="form-group full"><label>Sub-description</label><textarea id="svc_sub">From light companionship to skilled nursing support, our team delivers the exact level of care your loved one needs — no more, no less.</textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-icon">🧡</span> Service Cards</div>
+          <button class="add-btn" style="width:auto;padding:7px 14px" onclick="addService()">+ Add Service</button>
+        </div>
+        <div class="card-body" id="servicesContainer"></div>
+      </div>
+    </div>
+
+    <!-- ===== PRICING ===== -->
+    <div class="page" id="page-pricing">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">📝</span> Section Header</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Section Label</label><input type="text" id="pkg_label" value="Our Packages"/></div>
+            <div class="form-group"><label>Heading</label><input type="text" id="pkg_h2" value="Simple, transparent pricing"/></div>
+            <div class="form-group full"><label>Sub-description</label><textarea id="pkg_sub">Choose the care package that fits your family's needs and budget. All plans include a free initial consultation.</textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pricing-tabs">
+        <button class="plan-tab active" onclick="showPlan('basic',this)">🟤 Basic</button>
+        <button class="plan-tab" onclick="showPlan('premium',this)">🌿 Premium</button>
+        <button class="plan-tab" onclick="showPlan('gold',this)">🥇 Gold</button>
+      </div>
+
+      <!-- BASIC -->
+      <div class="tab-content active" id="plan-basic">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Sahulat Basic Plan</div></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="form-group"><label>Plan Name</label><input type="text" id="basic_name" value="Sahulat Basic"/></div>
+              <div class="form-group"><label>Price</label><input type="text" id="basic_price" value="PKR 15K"/></div>
+              <div class="form-group"><label>Price Period</label><input type="text" id="basic_period" value="/ month"/></div>
+              <div class="form-group"><label>Button Text</label><input type="text" id="basic_btn" value="Get Basic Plan"/></div>
+              <div class="form-group full"><label>Description</label><textarea id="basic_desc">Ideal for seniors who need light assistance and companionship — maintaining independence at home.</textarea></div>
+            </div>
+            <div class="section-divider">Features (✓ Included)</div>
+            <div id="basic_features_incl"></div>
+            <button class="add-btn" onclick="addFeature('basic','incl')">+ Add Included Feature</button>
+            <div class="section-divider" style="margin-top:16px">Features (✗ Not Included)</div>
+            <div id="basic_features_excl"></div>
+            <button class="add-btn" onclick="addFeature('basic','excl')">+ Add Excluded Feature</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREMIUM -->
+      <div class="tab-content" id="plan-premium">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Sahulat Premium Plan</div></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="form-group"><label>Plan Name</label><input type="text" id="premium_name" value="Sahulat Premium"/></div>
+              <div class="form-group"><label>Price</label><input type="text" id="premium_price" value="PKR 35K"/></div>
+              <div class="form-group"><label>Price Period</label><input type="text" id="premium_period" value="/ month"/></div>
+              <div class="form-group"><label>Button Text</label><input type="text" id="premium_btn" value="Get Premium Plan"/></div>
+              <div class="form-group full"><label>Description</label><textarea id="premium_desc">Comprehensive daily care for seniors who need consistent, professional support with medical oversight.</textarea></div>
+            </div>
+            <div class="section-divider">Features (✓ Included)</div>
+            <div id="premium_features_incl"></div>
+            <button class="add-btn" onclick="addFeature('premium','incl')">+ Add Included Feature</button>
+            <div class="section-divider" style="margin-top:16px">Features (✗ Not Included)</div>
+            <div id="premium_features_excl"></div>
+            <button class="add-btn" onclick="addFeature('premium','excl')">+ Add Excluded Feature</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GOLD -->
+      <div class="tab-content" id="plan-gold">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Sahulat Gold Plan</div></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="form-group"><label>Plan Name</label><input type="text" id="gold_name" value="Sahulat Gold"/></div>
+              <div class="form-group"><label>Price</label><input type="text" id="gold_price" value="PKR 65K"/></div>
+              <div class="form-group"><label>Price Period</label><input type="text" id="gold_period" value="/ month"/></div>
+              <div class="form-group"><label>Button Text</label><input type="text" id="gold_btn" value="Get Gold Plan"/></div>
+              <div class="form-group full"><label>Description</label><textarea id="gold_desc">Elite around-the-clock care with dedicated nursing, therapy, and premium concierge-level services.</textarea></div>
+            </div>
+            <div class="section-divider">Features (✓ Included)</div>
+            <div id="gold_features_incl"></div>
+            <button class="add-btn" onclick="addFeature('gold','incl')">+ Add Included Feature</button>
+            <div class="section-divider" style="margin-top:16px">Features (✗ Not Included)</div>
+            <div id="gold_features_excl"></div>
+            <button class="add-btn" onclick="addFeature('gold','excl')">+ Add Excluded Feature</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <div class="page" id="page-testimonials">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">📝</span> Section Header</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Section Label</label><input type="text" id="test_label" value="Families We've Helped"/></div>
+            <div class="form-group"><label>Heading</label><input type="text" id="test_h2" value="Words from the families we serve"/></div>
+            <div class="form-group full"><label>Sub-description</label><textarea id="test_sub">Real stories from real people who trusted us with what matters most.</textarea></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-icon">⭐</span> Testimonials</div>
+          <button class="add-btn" style="width:auto;padding:7px 14px" onclick="addTestimonial()">+ Add Testimonial</button>
+        </div>
+        <div class="card-body" id="testimonialsContainer"></div>
+      </div>
+    </div>
+
+    <!-- ===== VIDEO ===== -->
+    <div class="page" id="page-video">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">📝</span> Section Header</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Section Label</label><input type="text" id="vid_label" value="Watch & Learn"/></div>
+            <div class="form-group"><label>Heading</label><input type="text" id="vid_h2" value="See SehatSahulat in action"/></div>
+            <div class="form-group full"><label>Sub-description</label><textarea id="vid_sub">Watch how our caregivers bring warmth, professionalism, and peace of mind to families across Pakistan every single day.</textarea></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">🎬</span> Playlist Videos</div></div>
+        <div class="card-body" id="playlistContainer"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">⭐</span> Video Feature Points</div></div>
+        <div class="card-body">
+          <div class="form-group"><label>Feature 1</label><input type="text" id="vf1" value="Real stories from real families — unscripted and heartfelt"/></div>
+          <div class="form-group"><label>Feature 2</label><input type="text" id="vf2" value="Behind-the-scenes look at our nurse-supervised care process"/></div>
+          <div class="form-group"><label>Feature 3</label><input type="text" id="vf3" value="How our health monitoring app keeps families connected"/></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CTA ===== -->
+    <div class="page" id="page-cta">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">📞</span> CTA Section</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Section Label</label><input type="text" id="cta_label" value="Take the First Step"/></div>
+            <div class="form-group"><label>Heading</label><input type="text" id="cta_h2" value="Your loved one deserves the best"/></div>
+            <div class="form-group full"><label>Description</label><textarea id="cta_desc">Schedule a free, no-obligation consultation today. We're here to listen, guide, and help you find the right care package.</textarea></div>
+            <div class="form-group"><label>Button Text</label><input type="text" id="cta_btn" value="📞 Call +92-300-0000000"/></div>
+            <div class="form-group"><label>Phone Number (href)</label><input type="tel" id="cta_phone" value="+92300000000"/></div>
+            <div class="form-group full"><label>Secondary Text (email line)</label><input type="text" id="cta_secondary" value="Or email us at care@sehatsahulat.pk"/></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">🔗</span> Footer Links & Info</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Footer Tagline</label><input type="text" id="footer_tag" value="Trusted in-home caregiving services in Pakistan — putting dignity, compassion, and family first."/></div>
+            <div class="form-group"><label>Copyright Text</label><input type="text" id="footer_copy" value="© 2026 SehatSahulat. All rights reserved."/></div>
+            <div class="form-group"><label>Office 1</label><input type="text" id="footer_office1" value="Karachi Office"/></div>
+            <div class="form-group"><label>Office 2</label><input type="text" id="footer_office2" value="Lahore Office"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MEDIA ===== -->
+    <div class="page" id="page-media">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">📤</span> Upload Images</div></div>
+        <div class="card-body">
+          <div class="img-upload" id="mediaUploadArea">
+            <input type="file" accept="image/*" multiple onchange="handleMediaUpload(event)"/>
+            <div class="img-upload-icon">🖼️</div>
+            <p>Drop images here or <span>browse files</span></p>
+            <p style="font-size:11px;margin-top:6px">PNG, JPG, WebP, GIF — max 5MB each</p>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-icon">🗂️</span> Media Library</div>
+          <span class="badge green" id="mediaCount">0 files</span>
+        </div>
+        <div class="card-body">
+          <div class="media-grid" id="mediaGrid">
+            <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);font-size:13px">
+              No images yet. Upload files above to build your media library.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGES ===== -->
+    <div class="page" id="page-pages">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">📄</span> Page Section Visibility</div></div>
+        <div class="card-body">
+          <p style="font-size:13px;color:var(--text3);margin-bottom:16px">Toggle sections on/off. Hidden sections won't show on the live site.</p>
+          <div id="sectionToggles"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">🔀</span> Section Order</div></div>
+        <div class="card-body">
+          <p style="font-size:13px;color:var(--text3);margin-bottom:16px">Drag sections to reorder them on the page.</p>
+          <div id="sectionOrder"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">🗂️</span> Navigation Menu</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Nav Link 1</label><input type="text" id="nav1" value="Services"/></div>
+            <div class="form-group"><label>Nav Link 1 Href</label><input type="text" id="nav1h" value="#services"/></div>
+            <div class="form-group"><label>Nav Link 2</label><input type="text" id="nav2" value="Packages"/></div>
+            <div class="form-group"><label>Nav Link 2 Href</label><input type="text" id="nav2h" value="#pricing"/></div>
+            <div class="form-group"><label>Nav Link 3</label><input type="text" id="nav3" value="How It Works"/></div>
+            <div class="form-group"><label>Nav Link 3 Href</label><input type="text" id="nav3h" value="#how"/></div>
+            <div class="form-group"><label>Nav CTA Button</label><input type="text" id="nav_cta" value="Get Started"/></div>
+            <div class="form-group"><label>Nav CTA Href</label><input type="text" id="nav_ctah" value="#contact"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DESIGN ===== -->
+    <div class="page" id="page-design">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">🎨</span> Brand Colors</div></div>
+        <div class="card-body">
+          <div class="theme-colors" id="themeColors">
+            <div class="color-field">
+              <div class="color-swatch" style="background:#3A6351"></div>
+              <div class="color-info"><div class="cn">Forest (Primary)</div><div class="cv">#3A6351</div></div>
+              <input type="color" value="#3A6351" onchange="updateColor('forest',this.value)" style="margin-left:auto"/>
+            </div>
+            <div class="color-field">
+              <div class="color-swatch" style="background:#B5623A"></div>
+              <div class="color-info"><div class="cn">Rust (Accent)</div><div class="cv">#B5623A</div></div>
+              <input type="color" value="#B5623A" onchange="updateColor('rust',this.value)" style="margin-left:auto"/>
+            </div>
+            <div class="color-field">
+              <div class="color-swatch" style="background:#C9951A"></div>
+              <div class="color-info"><div class="cn">Gold (Premium)</div><div class="cv">#C9951A</div></div>
+              <input type="color" value="#C9951A" onchange="updateColor('gold',this.value)" style="margin-left:auto"/>
+            </div>
+            <div class="color-field">
+              <div class="color-swatch" style="background:#C8A882"></div>
+              <div class="color-info"><div class="cn">Clay (Borders)</div><div class="cv">#C8A882</div></div>
+              <input type="color" value="#C8A882" onchange="updateColor('clay',this.value)" style="margin-left:auto"/>
+            </div>
+            <div class="color-field">
+              <div class="color-swatch" style="background:#FDF8F2"></div>
+              <div class="color-info"><div class="cn">Cream (Background)</div><div class="cv">#FDF8F2</div></div>
+              <input type="color" value="#FDF8F2" onchange="updateColor('cream',this.value)" style="margin-left:auto"/>
+            </div>
+            <div class="color-field">
+              <div class="color-swatch" style="background:#1E1A16"></div>
+              <div class="color-info"><div class="cn">Text Dark</div><div class="cv">#1E1A16</div></div>
+              <input type="color" value="#1E1A16" onchange="updateColor('text-dark',this.value)" style="margin-left:auto"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">🔤</span> Typography</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Display Font (Headings)</label>
+              <select id="font_display">
+                <option selected>Playfair Display</option>
+                <option>Cormorant Garamond</option>
+                <option>Lora</option>
+                <option>Merriweather</option>
+                <option>Georgia</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Body Font</label>
+              <select id="font_body">
+                <option selected>DM Sans</option>
+                <option>Inter</option>
+                <option>Outfit</option>
+                <option>Nunito</option>
+                <option>Poppins</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Base Font Size</label>
+              <select id="font_size">
+                <option>13px</option>
+                <option selected>14px</option>
+                <option>15px</option>
+                <option>16px</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Border Radius Style</label>
+              <select id="border_radius">
+                <option>4px — Sharp</option>
+                <option selected>16px — Rounded</option>
+                <option>24px — Pill</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">🌙</span> Presets</div></div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+            <button class="add-btn" onclick="applyPreset('forest')" style="padding:16px">
+              <div style="font-size:20px;margin-bottom:6px">🌿</div>
+              <div style="font-weight:500;color:var(--text)">Forest Green</div>
+              <div style="color:var(--text3);font-size:12px;margin-top:3px">Current theme</div>
+            </button>
+            <button class="add-btn" onclick="applyPreset('ocean')" style="padding:16px">
+              <div style="font-size:20px;margin-bottom:6px">🌊</div>
+              <div style="font-weight:500;color:var(--text)">Ocean Blue</div>
+              <div style="color:var(--text3);font-size:12px;margin-top:3px">Cool &amp; calm</div>
+            </button>
+            <button class="add-btn" onclick="applyPreset('royal')" style="padding:16px">
+              <div style="font-size:20px;margin-bottom:6px">👑</div>
+              <div style="font-weight:500;color:var(--text)">Royal Purple</div>
+              <div style="color:var(--text3);font-size:12px;margin-top:3px">Regal &amp; premium</div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SETTINGS ===== -->
+    <div class="page" id="page-settings">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">🌐</span> Site Identity</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Site Name</label><input type="text" id="site_name" value="SehatSahulat"/></div>
+            <div class="form-group"><label>Site Tagline</label><input type="text" id="site_tagline" value="Home Care Services"/></div>
+            <div class="form-group"><label>Browser Tab Title</label><input type="text" id="site_title" value="SehatSahulat — Home Care Services"/></div>
+            <div class="form-group"><label>Logo Emoji / Icon</label><input type="text" id="site_icon" value="♡"/></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">📞</span> Contact Information</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Phone Number</label><input type="tel" id="contact_phone" value="+92-300-0000000"/></div>
+            <div class="form-group"><label>Email</label><input type="email" id="contact_email" value="care@sehatsahulat.pk"/></div>
+            <div class="form-group"><label>City / Region</label><input type="text" id="contact_city" value="Karachi, Pakistan"/></div>
+            <div class="form-group"><label>WhatsApp Number</label><input type="text" id="contact_wa" value="+923000000000"/></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">🤖</span> AI Chat Agent</div></div>
+        <div class="card-body">
+          <div class="toggle-row">
+            <div class="toggle-info"><div class="tl">Enable AI Chat</div><div class="td">Show the AI chat bubble on the website</div></div>
+            <label class="toggle"><input type="checkbox" id="ai_enabled" checked/><span class="toggle-slider"></span></label>
+          </div>
+          <div class="form-group" style="margin-top:16px"><label>Chat Agent Name</label><input type="text" id="ai_name" value="SehatSahulat Assistant"/></div>
+          <div class="form-group"><label>Welcome Message</label><textarea id="ai_welcome">Assalam o Alaikum! 👋 I'm the SehatSahulat assistant. I can help you learn about our care packages, services, and how to get started. What would you like to know?</textarea></div>
+          <div class="form-group">
+            <label>System Prompt (AI Personality &amp; Knowledge)</label>
+            <textarea id="ai_prompt" style="min-height:160px;font-family:'DM Mono',monospace;font-size:12px">You are a helpful, warm, and professional AI assistant for SehatSahulat — a home care services company in Pakistan. Your job is to help potential clients and their families understand the services, packages, and how to get started.
+
+Key information:
+- Services: Companion Care, Personal Care, Medication Management, Meal Preparation, Home Management, Memory Care
+- Basic: PKR 15,000/month · Premium: PKR 35,000/month · Gold: PKR 65,000/month
+- Free consultation for all packages
+- Contact: +92-300-0000000 | care@sehatsahulat.pk
+
+Be warm, concise (2-4 sentences), reply in Urdu or English based on user.</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="card-icon">⚠️</span> Danger Zone</div></div>
+        <div class="card-body">
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button class="danger-btn" onclick="resetToDefaults()">🔄 Reset All to Defaults</button>
+            <button class="danger-btn" onclick="exportData()">📥 Export Site Data (JSON)</button>
+            <button class="add-btn" style="width:auto;padding:9px 16px" onclick="importData()">📤 Import Site Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA STORE =====
+const STORAGE_KEY = 'sehatsahulat_admin';
+
+let slides = [
+  {tag:'Trusted Care at Home',title:'Your family deserves compassionate, dignified care',desc:'Professional caregivers available 4 to 24 hours a day, matched to your loved one\'s needs.',btn:'Book Free Consultation',bg:'linear-gradient(135deg,#2c4a3a 0%,#3a6351 40%,#5a8c70 100%)',emoji:'🤲',imgUrl:''},
+  {tag:'Medical Support',title:'Nurse-supervised medication management & health monitoring',desc:'From medication reminders to real-time health tracking — we keep your loved ones safe.',btn:'Explore Services',bg:'linear-gradient(135deg,#4a2c1a 0%,#7a4a2a 40%,#b5623a 100%)',emoji:'💊',imgUrl:''},
+  {tag:'All 3 Packages',title:'Basic, Premium & Gold — a plan for every family',desc:'Starting from PKR 15,000/month. Flexible, transparent, and always tailored to you.',btn:'See Packages',bg:'linear-gradient(135deg,#1a2c4a 0%,#2a4a7a 40%,#3a6ab5 100%)',emoji:'🏠',imgUrl:''},
+  {tag:'Specialized Care',title:'Expert memory care for Alzheimer\'s & dementia patients',desc:'Structured routines, gentle engagement, and a safe environment — every single day.',btn:'Learn More',bg:'linear-gradient(135deg,#3a2a10 0%,#6a4a18 40%,#c9951a 100%)',emoji:'🧠',imgUrl:''},
+  {tag:'2,400+ Families Served',title:'Trusted by families across Karachi & Lahore',desc:'98% satisfaction rate. Background-verified caregivers. 24/7 support line — always here.',btn:'Read Reviews',bg:'linear-gradient(135deg,#2a1a3a 0%,#4a2a6a 40%,#7a4ab5 100%)',emoji:'👨‍👩‍👧‍👦',imgUrl:''}
+];
+
+let services = [
+  {emoji:'🧡',title:'Companion Care',desc:'Meaningful conversation, light activities, outings, and emotional support to combat loneliness and keep spirits high.'},
+  {emoji:'🛁',title:'Personal Care',desc:'Dignified assistance with bathing, grooming, dressing, mobility, and toileting — preserving independence with respect.'},
+  {emoji:'💊',title:'Medication Management',desc:'Timely reminders and supervision to ensure medications are taken correctly, safely, and on schedule.'},
+  {emoji:'🍲',title:'Meal Preparation',desc:'Nutritious, home-cooked meals planned around dietary needs, preferences, and cultural tastes.'},
+  {emoji:'🏠',title:'Home Management',desc:'Light housekeeping, laundry, organizing, and errands that keep the home safe, clean, and comfortable.'},
+  {emoji:'🧠',title:'Memory Care',desc:'Specialized support for those living with Alzheimer\'s or dementia, creating structure, safety, and calm.'}
+];
+
+let testimonials = [
+  {name:'Lubna M.',relation:'Daughter of client · Premium Plan',text:'The caregiver assigned to my mother has become part of our family. She\'s patient, genuinely caring, and my mother looks forward to her visits. SehatSahulat truly lives up to its name.',stars:5,initials:'LM',color:'#B5623A'},
+  {name:'Rizwan K.',relation:'Son of client · Gold Plan',text:'After my father\'s surgery, we chose the Gold plan. The dedicated nurse coordinator gave us real peace of mind. The 24/7 coverage is absolutely worth it.',stars:5,initials:'RK',color:'#3A6351'},
+  {name:'Parveen H.',relation:'Daughter-in-law · Basic Plan',text:'We started with the Basic plan and it was perfect — light help, great company for Mama. Affordable and so well-organized. Highly recommend SehatSahulat.',stars:5,initials:'PH',color:'#C8A882'}
+];
+
+let playlist = [
+  {emoji:'🤲',title:'A Day with Our Caregivers',duration:'3:42 · Companion Care',videoId:'dQw4w9WgXcQ'},
+  {emoji:'💊',title:'Medication Management Explained',duration:'2:15 · Health Services',videoId:'ScMzIvxBSi4'},
+  {emoji:'🧠',title:'Memory Care — Our Approach',duration:'4:10 · Specialized Care',videoId:'9bZkp7q19f0'},
+  {emoji:'👨‍👩‍👧‍👦',title:'Family Testimonials',duration:'5:22 · Reviews',videoId:'3JZ_D3ELwOQ'}
+];
+
+let planFeatures = {
+  basic:{incl:['4 hrs/day caregiver visit (5 days/week)','Companion & emotional support','Light housekeeping & errands','Meal preparation (1 meal/day)','Medication reminders','Weekly health check-in report'],excl:['Overnight care','Physiotherapy sessions','Dedicated nurse coordinator']},
+  premium:{incl:['8 hrs/day caregiver visit (6 days/week)','Companion & emotional support','Full housekeeping & laundry','All meals prepared (3 meals/day)','Medication management & tracking','Bi-weekly nursing assessment','Transport to doctor appointments','Daily digital health report'],excl:['Overnight care']},
+  gold:{incl:['24/7 live-in caregiver','Overnight care included','Dedicated RN care coordinator','Full housekeeping & premium meals','Advanced medication management','Weekly physiotherapy sessions','Doctor coordination & transport','Real-time health monitoring app','Monthly family progress meeting'],excl:[]}
+};
+
+let sections = [
+  {id:'slider',name:'Image Slider',visible:true},
+  {id:'hero',name:'Hero Section',visible:true},
+  {id:'trust',name:'Trust Bar',visible:true},
+  {id:'services',name:'Services',visible:true},
+  {id:'video',name:'Video Section',visible:true},
+  {id:'pricing',name:'Packages & Pricing',visible:true},
+  {id:'how',name:'How It Works',visible:true},
+  {id:'testimonials',name:'Testimonials',visible:true},
+  {id:'cta',name:'CTA & Contact',visible:true},
+  {id:'footer',name:'Footer',visible:true}
+];
+
+let mediaFiles = [];
+
+// ===== NAV =====
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  const titles = {dashboard:'Dashboard',hero:'Hero Section',slider:'Image Slider',services:'Services',pricing:'Packages & Pricing',testimonials:'Testimonials',video:'Video Section',cta:'CTA & Contact',media:'Media Library',pages:'Page Manager',design:'Design & Theme',settings:'Site Settings'};
+  document.getElementById('topbarTitle').textContent = titles[id]||id;
+}
+
+// ===== TABS =====
+function showPlan(plan, btn) {
+  document.querySelectorAll('.plan-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('[id^="plan-"]').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('plan-'+plan).classList.add('active');
+}
+
+// ===== RENDER SLIDES =====
+function renderSlides() {
+  const c = document.getElementById('slidesContainer');
+  c.innerHTML = slides.map((s,i) => `
+    <div class="slide-item" id="slide_item_${i}">
+      <div class="slide-item-header">
+        <div class="slide-num">${i+1}</div>
+        <div class="slide-label">Slide ${i+1}</div>
+        <div class="slide-actions">
+          ${i>0?`<button class="icon-btn" onclick="moveSlideItem(${i},-1)" title="Move up">↑</button>`:''}
+          ${i<slides.length-1?`<button class="icon-btn" onclick="moveSlideItem(${i},1)" title="Move down">↓</button>`:''}
+          <button class="icon-btn danger" onclick="deleteSlide(${i})" title="Delete">✕</button>
+        </div>
+      </div>
+      <div class="slide-preview" style="background:${s.bg}">
+        ${s.imgUrl?`<img class="slide-preview-img" src="${s.imgUrl}" />`:`<span style="font-size:40px">${s.emoji}</span>`}
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>Tag / Badge</label><input type="text" value="${esc(s.tag)}" onchange="slides[${i}].tag=this.value"/></div>
+        <div class="form-group"><label>Button Text</label><input type="text" value="${esc(s.btn)}" onchange="slides[${i}].btn=this.value"/></div>
+        <div class="form-group full"><label>Title</label><input type="text" value="${esc(s.title)}" onchange="slides[${i}].title=this.value"/></div>
+        <div class="form-group full"><label>Description</label><textarea onchange="slides[${i}].desc=this.value">${esc(s.desc)}</textarea></div>
+        <div class="form-group"><label>Emoji (if no image)</label><input type="text" value="${s.emoji}" onchange="slides[${i}].emoji=this.value;renderSlides()"/></div>
+        <div class="form-group"><label>Image URL (optional)</label><input type="url" value="${s.imgUrl||''}" placeholder="https://..." onchange="slides[${i}].imgUrl=this.value;renderSlides()"/></div>
+        <div class="form-group full"><label>Background Gradient CSS</label><input type="text" value="${esc(s.bg)}" onchange="slides[${i}].bg=this.value;renderSlides()"/></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addSlide() {
+  slides.push({tag:'New Slide',title:'Your headline here',desc:'A brief description for this slide.',btn:'Learn More',bg:'linear-gradient(135deg,#2c4a3a,#3a6351)',emoji:'✨',imgUrl:''});
+  renderSlides();
+  logActivity('Added new slide');
+}
+
+function deleteSlide(i) {
+  if(slides.length<=1){showToast('Need at least 1 slide','error');return;}
+  slides.splice(i,1);
+  renderSlides();
+  logActivity('Deleted slide '+(i+1));
+}
+
+function moveSlideItem(i,dir) {
+  const t=slides[i]; slides[i]=slides[i+dir]; slides[i+dir]=t;
+  renderSlides();
+}
+
+// ===== RENDER SERVICES =====
+function renderServices() {
+  const c = document.getElementById('servicesContainer');
+  c.innerHTML = services.map((s,i) => `
+    <div class="service-item">
+      <div class="service-row">
+        <input type="text" value="${s.emoji}" style="text-align:center;font-size:22px" onchange="services[${i}].emoji=this.value"/>
+        <input type="text" value="${esc(s.title)}" placeholder="Service Name" onchange="services[${i}].title=this.value"/>
+        <textarea style="min-height:58px" onchange="services[${i}].desc=this.value">${esc(s.desc)}</textarea>
+        <button class="icon-btn danger" onclick="deleteService(${i})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addService() {
+  services.push({emoji:'⭐',title:'New Service',desc:'Describe this service here.'});
+  renderServices();
+}
+
+function deleteService(i) {
+  services.splice(i,1);
+  renderServices();
+}
+
+// ===== RENDER PLAN FEATURES =====
+function renderFeatures(plan) {
+  ['incl','excl'].forEach(type => {
+    const c = document.getElementById(`${plan}_features_${type}`);
+    if(!c) return;
+    c.innerHTML = planFeatures[plan][type].map((f,i) => `
+      <div class="feature-item">
+        <input type="text" value="${esc(f)}" onchange="planFeatures['${plan}']['${type}'][${i}]=this.value"/>
+        <button class="icon-btn danger" onclick="deleteFeature('${plan}','${type}',${i})">✕</button>
+      </div>
+    `).join('');
+  });
+}
+
+function addFeature(plan,type) {
+  planFeatures[plan][type].push('New feature');
+  renderFeatures(plan);
+}
+
+function deleteFeature(plan,type,i) {
+  planFeatures[plan][type].splice(i,1);
+  renderFeatures(plan);
+}
+
+// ===== RENDER TESTIMONIALS =====
+function renderTestimonials() {
+  const c = document.getElementById('testimonialsContainer');
+  c.innerHTML = testimonials.map((t,i) => `
+    <div class="test-item">
+      <div class="flex gap-12" style="margin-bottom:12px;justify-content:space-between">
+        <div class="flex gap-8">
+          <div style="width:36px;height:36px;border-radius:50%;background:${t.color};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:white;flex-shrink:0">${t.initials}</div>
+          <div>
+            <input type="text" value="${esc(t.name)}" style="width:160px;margin-bottom:4px" onchange="testimonials[${i}].name=this.value"/>
+            <input type="text" value="${esc(t.relation)}" style="width:200px;font-size:12px" onchange="testimonials[${i}].relation=this.value"/>
+          </div>
+        </div>
+        <div class="flex gap-8">
+          <select onchange="testimonials[${i}].stars=parseInt(this.value)" style="width:100px">
+            ${[5,4,3,2,1].map(n=>`<option ${t.stars===n?'selected':''}>${n} stars</option>`).join('')}
+          </select>
+          <input type="color" value="${t.color}" onchange="testimonials[${i}].color=this.value;renderTestimonials()" style="width:36px;height:34px;padding:2px"/>
+          <input type="text" value="${t.initials}" style="width:50px;text-align:center" onchange="testimonials[${i}].initials=this.value"/>
+          <button class="icon-btn danger" onclick="deleteTestimonial(${i})">✕</button>
+        </div>
+      </div>
+      <textarea onchange="testimonials[${i}].text=this.value" style="min-height:70px">${esc(t.text)}</textarea>
+    </div>
+  `).join('');
+}
+
+function addTestimonial() {
+  testimonials.push({name:'New Person',relation:'Family member',text:'Share their experience here.',stars:5,initials:'NP',color:'#3A6351'});
+  renderTestimonials();
+}
+
+function deleteTestimonial(i) {
+  testimonials.splice(i,1);
+  renderTestimonials();
+}
+
+// ===== RENDER PLAYLIST =====
+function renderPlaylist() {
+  const c = document.getElementById('playlistContainer');
+  c.innerHTML = playlist.map((v,i) => `
+    <div class="service-item" style="margin-bottom:10px">
+      <div class="service-row">
+        <input type="text" value="${v.emoji}" style="text-align:center;font-size:22px" onchange="playlist[${i}].emoji=this.value"/>
+        <input type="text" value="${esc(v.title)}" placeholder="Video Title" onchange="playlist[${i}].title=this.value"/>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <input type="text" value="${esc(v.duration)}" placeholder="Duration" onchange="playlist[${i}].duration=this.value"/>
+          <input type="text" value="${esc(v.videoId)}" placeholder="YouTube Video ID" onchange="playlist[${i}].videoId=this.value"/>
+        </div>
+        <button class="icon-btn danger" onclick="deletePlaylistItem(${i})">✕</button>
+      </div>
+    </div>
+  `).join('') + `<button class="add-btn" onclick="addPlaylistItem()">+ Add Video</button>`;
+}
+
+function addPlaylistItem() {
+  playlist.push({emoji:'🎬',title:'New Video',duration:'0:00 · Topic',videoId:'dQw4w9WgXcQ'});
+  renderPlaylist();
+}
+
+function deletePlaylistItem(i) {
+  playlist.splice(i,1);
+  renderPlaylist();
+}
+
+// ===== SECTION TOGGLES =====
+function renderSectionToggles() {
+  document.getElementById('sectionToggles').innerHTML = sections.map((s,i) => `
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <div class="tl">${s.name}</div>
+        <div class="td">${s.visible?'Visible on site':'Hidden from site'}</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" ${s.visible?'checked':''} onchange="sections[${i}].visible=this.checked;renderSectionToggles();renderSectionOrder()"/>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  `).join('');
+}
+
+function renderSectionOrder() {
+  document.getElementById('sectionOrder').innerHTML = sections.map((s,i) => `
+    <div class="section-item">
+      <span class="drag-handle">⠿</span>
+      <span class="section-name">${s.name}</span>
+      <span class="section-status ${s.visible?'visible':'hidden'}">${s.visible?'Visible':'Hidden'}</span>
+      ${i>0?`<button class="icon-btn" onclick="moveSect(${i},-1)" style="margin-left:6px">↑</button>`:''}
+      ${i<sections.length-1?`<button class="icon-btn" onclick="moveSect(${i},1)">↓</button>`:''}
+    </div>
+  `).join('');
+  // Dashboard overview
+  document.getElementById('sectionOverview').innerHTML = sections.map(s => `
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;text-align:center">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;color:var(--text2)">${s.name}</div>
+      <span class="badge ${s.visible?'green':'red'}">${s.visible?'Visible':'Hidden'}</span>
+    </div>
+  `).join('');
+}
+
+function moveSect(i,dir) {
+  const t=sections[i]; sections[i]=sections[i+dir]; sections[i+dir]=t;
+  renderSectionToggles(); renderSectionOrder();
+}
+
+// ===== MEDIA =====
+function handleMediaUpload(e) {
+  const files = Array.from(e.target.files);
+  files.forEach(file => {
+    if(file.size > 5*1024*1024){showToast('File too large: '+file.name,'error');return;}
+    const reader = new FileReader();
+    reader.onload = ev => {
+      mediaFiles.push({name:file.name, url:ev.target.result, size:file.size, type:file.type});
+      renderMedia();
+      logActivity('Uploaded: '+file.name);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderMedia() {
+  const g = document.getElementById('mediaGrid');
+  const count = document.getElementById('mediaCount');
+  count.textContent = mediaFiles.length + ' file' + (mediaFiles.length!==1?'s':'');
+  document.getElementById('d-media').textContent = mediaFiles.length;
+  if(mediaFiles.length===0){
+    g.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);font-size:13px">No images yet. Upload files above to build your media library.</div>';
+    return;
+  }
+  g.innerHTML = mediaFiles.map((f,i) => `
+    <div class="media-item" onclick="selectMedia(${i})">
+      <img src="${f.url}" class="media-thumb" style="height:90px;object-fit:cover;display:block;width:100%"/>
+      <div class="media-name">${f.name}</div>
+      <button class="media-del" onclick="event.stopPropagation();deleteMedia(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function selectMedia(i) {
+  showToast('Image URL copied to clipboard!');
+}
+
+function deleteMedia(i) {
+  mediaFiles.splice(i,1);
+  renderMedia();
+}
+
+// ===== COLORS =====
+function updateColor(name, val) {
+  showToast('Color updated — save to apply to site');
+  logActivity(`Updated ${name} color to ${val}`);
+}
+
+function applyPreset(name) {
+  const presets = {
+    forest:{forest:'#3A6351',rust:'#B5623A',gold:'#C9951A'},
+    ocean:{forest:'#1a5c85',rust:'#1a7a8a',gold:'#2b8a6e'},
+    royal:{forest:'#4a2d8a',rust:'#8a2d6e',gold:'#6e2d8a'}
+  };
+  showToast('Applied '+name+' preset — save to apply');
+  logActivity('Applied color preset: '+name);
+}
+
+// ===== SAVE =====
+async function saveAll() {
+  const btn = document.getElementById('saveBtn');
+  btn.classList.add('saving');
+  btn.textContent = '⏳ Saving...';
+
+  const data = {
+    slides, services, testimonials, playlist, planFeatures, sections, mediaFiles,
+    hero: {
+      badge: v('hero_badge'), h1: v('hero_h1'), h1em: v('hero_h1em'),
+      sub: v('hero_sub'), btn1: v('hero_btn1'), btn2: v('hero_btn2'),
+      cg_name: v('cg_name'), cg_role: v('cg_role'), cg_rating: v('cg_rating'),
+      stat1_num:v('stat1_num'),stat1_lbl:v('stat1_lbl'),
+      stat2_num:v('stat2_num'),stat2_lbl:v('stat2_lbl'),
+      stat3_num:v('stat3_num'),stat3_lbl:v('stat3_lbl'),
+      trust1:v('trust1'),trust2:v('trust2'),trust3:v('trust3'),trust4:v('trust4')
+    },
+    services_header:{label:v('svc_label'),h2:v('svc_h2'),sub:v('svc_sub')},
+    pkg:{label:v('pkg_label'),h2:v('pkg_h2'),sub:v('pkg_sub'),
+      basic:{name:v('basic_name'),price:v('basic_price'),period:v('basic_period'),btn:v('basic_btn'),desc:v('basic_desc')},
+      premium:{name:v('premium_name'),price:v('premium_price'),period:v('premium_period'),btn:v('premium_btn'),desc:v('premium_desc')},
+      gold:{name:v('gold_name'),price:v('gold_price'),period:v('gold_period'),btn:v('gold_btn'),desc:v('gold_desc')}
+    },
+    test_header:{label:v('test_label'),h2:v('test_h2'),sub:v('test_sub')},
+    vid:{label:v('vid_label'),h2:v('vid_h2'),sub:v('vid_sub'),vf1:v('vf1'),vf2:v('vf2'),vf3:v('vf3')},
+    cta:{label:v('cta_label'),h2:v('cta_h2'),desc:v('cta_desc'),btn:v('cta_btn'),phone:v('cta_phone'),secondary:v('cta_secondary'),
+      footer_tag:v('footer_tag'),footer_copy:v('footer_copy'),footer_office1:v('footer_office1'),footer_office2:v('footer_office2')},
+    nav:{n1:v('nav1'),n1h:v('nav1h'),n2:v('nav2'),n2h:v('nav2h'),n3:v('nav3'),n3h:v('nav3h'),cta:v('nav_cta'),ctah:v('nav_ctah')},
+    site:{name:v('site_name'),tagline:v('site_tagline'),title:v('site_title'),icon:v('site_icon'),
+      phone:v('contact_phone'),email:v('contact_email'),city:v('contact_city'),wa:v('contact_wa')},
+    ai:{enabled:document.getElementById('ai_enabled').checked,name:v('ai_name'),welcome:v('ai_welcome'),prompt:v('ai_prompt')},
+    slider_settings:{interval:v('slide_interval'),height:v('slide_height')}
+  };
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    await new Promise(r=>setTimeout(r,800));
+    showToast('✅ All changes saved successfully!');
+    logActivity('All changes saved to storage');
+  } catch(e) {
+    showToast('Save failed: '+e.message,'error');
+  }
+
+  btn.classList.remove('saving');
+  btn.textContent = '💾 Save Changes';
+}
+
+function v(id) {
+  const el = document.getElementById(id);
+  return el ? el.value : '';
+}
+
+function loadSaved() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(!saved) return;
+    const d = JSON.parse(saved);
+    if(d.slides) slides = d.slides;
+    if(d.services) services = d.services;
+    if(d.testimonials) testimonials = d.testimonials;
+    if(d.playlist) playlist = d.playlist;
+    if(d.planFeatures) planFeatures = d.planFeatures;
+    if(d.sections) sections = d.sections;
+    if(d.mediaFiles) mediaFiles = d.mediaFiles;
+
+    const setVal = (id,val) => { const el=document.getElementById(id); if(el&&val!==undefined) el.value=val; };
+
+    if(d.hero) {
+      setVal('hero_badge',d.hero.badge); setVal('hero_h1',d.hero.h1); setVal('hero_h1em',d.hero.h1em);
+      setVal('hero_sub',d.hero.sub); setVal('hero_btn1',d.hero.btn1); setVal('hero_btn2',d.hero.btn2);
+      setVal('cg_name',d.hero.cg_name); setVal('cg_role',d.hero.cg_role); setVal('cg_rating',d.hero.cg_rating);
+      setVal('stat1_num',d.hero.stat1_num); setVal('stat1_lbl',d.hero.stat1_lbl);
+      setVal('stat2_num',d.hero.stat2_num); setVal('stat2_lbl',d.hero.stat2_lbl);
+      setVal('stat3_num',d.hero.stat3_num); setVal('stat3_lbl',d.hero.stat3_lbl);
+      setVal('trust1',d.hero.trust1); setVal('trust2',d.hero.trust2);
+      setVal('trust3',d.hero.trust3); setVal('trust4',d.hero.trust4);
+    }
+    if(d.pkg) {
+      setVal('pkg_label',d.pkg.label); setVal('pkg_h2',d.pkg.h2); setVal('pkg_sub',d.pkg.sub);
+      if(d.pkg.basic){setVal('basic_name',d.pkg.basic.name);setVal('basic_price',d.pkg.basic.price);setVal('basic_period',d.pkg.basic.period);setVal('basic_btn',d.pkg.basic.btn);setVal('basic_desc',d.pkg.basic.desc);}
+      if(d.pkg.premium){setVal('premium_name',d.pkg.premium.name);setVal('premium_price',d.pkg.premium.price);setVal('premium_period',d.pkg.premium.period);setVal('premium_btn',d.pkg.premium.btn);setVal('premium_desc',d.pkg.premium.desc);}
+      if(d.pkg.gold){setVal('gold_name',d.pkg.gold.name);setVal('gold_price',d.pkg.gold.price);setVal('gold_period',d.pkg.gold.period);setVal('gold_btn',d.pkg.gold.btn);setVal('gold_desc',d.pkg.gold.desc);}
+    }
+    if(d.cta){setVal('cta_label',d.cta.label);setVal('cta_h2',d.cta.h2);setVal('cta_desc',d.cta.desc);setVal('cta_btn',d.cta.btn);setVal('cta_phone',d.cta.phone);setVal('cta_secondary',d.cta.secondary);setVal('footer_tag',d.cta.footer_tag);setVal('footer_copy',d.cta.footer_copy);setVal('footer_office1',d.cta.footer_office1);setVal('footer_office2',d.cta.footer_office2);}
+    if(d.ai){const cb=document.getElementById('ai_enabled');if(cb)cb.checked=d.ai.enabled;setVal('ai_name',d.ai.name);setVal('ai_welcome',d.ai.welcome);setVal('ai_prompt',d.ai.prompt);}
+    if(d.site){setVal('site_name',d.site.name);setVal('site_tagline',d.site.tagline);setVal('site_title',d.site.title);setVal('site_icon',d.site.icon);setVal('contact_phone',d.site.phone);setVal('contact_email',d.site.email);setVal('contact_city',d.site.city);setVal('contact_wa',d.site.wa);}
+
+    logActivity('Loaded saved data from storage');
+  } catch(e) {
+    console.warn('Could not load saved data:', e);
+  }
+}
+
+function exportData() {
+  const data = localStorage.getItem(STORAGE_KEY) || '{}';
+  const blob = new Blob([data],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sehatsahulat-data.json';
+  a.click();
+  showToast('Data exported!');
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type='file'; input.accept='.json';
+  input.onchange = e => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        JSON.parse(ev.target.result);
+        localStorage.setItem(STORAGE_KEY, ev.target.result);
+        showToast('Data imported — reloading...');
+        setTimeout(()=>location.reload(), 1000);
+      } catch { showToast('Invalid JSON file','error'); }
+    };
+    reader.readAsText(e.target.files[0]);
+  };
+  input.click();
+}
+
+function resetToDefaults() {
+  if(!confirm('Reset ALL content to defaults? This cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  showToast('Reset complete — reloading...');
+  setTimeout(()=>location.reload(), 1000);
+}
+
+// ===== UTILS =====
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type?' '+type:'');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+function logActivity(msg) {
+  const log = document.getElementById('activityLog');
+  const item = document.createElement('div');
+  item.className = 'activity-item';
+  item.innerHTML = `<div class="activity-dot" style="background:var(--accent)"></div><div><div class="activity-text">${msg}</div><div class="activity-time">Just now</div></div>`;
+  log.insertBefore(item, log.firstChild);
+  if(log.children.length > 8) log.lastChild.remove();
+}
+
+// ===== AUTH =====
+const AUTH_KEY = 'ss_admin_auth';
+const LOCK_KEY = 'ss_admin_lock';
+const CREDS = { user: 'admin', pass: 'sehatsahulat@2026' };
+const MAX_ATTEMPTS = 5;
+const LOCK_MINUTES = 5;
+
+let lockTimer;
+
+function checkAuth() {
+  const auth = sessionStorage.getItem(AUTH_KEY);
+  if (auth === 'true') {
+    document.getElementById('loginScreen').style.display = 'none';
+    return true;
+  }
+  // Check if locked
+  checkLock();
+  return false;
+}
+
+function checkLock() {
+  const lockData = localStorage.getItem(LOCK_KEY);
+  if (!lockData) return false;
+  const { until } = JSON.parse(lockData);
+  const now = Date.now();
+  if (now < until) {
+    showLocked(until);
+    return true;
+  } else {
+    localStorage.removeItem(LOCK_KEY);
+    return false;
+  }
+}
+
+function showLocked(until) {
+  document.getElementById('loginFields').style.display = 'none';
+  document.getElementById('loginPassField').style.display = 'none';
+  document.getElementById('loginBtn').style.display = 'none';
+  document.getElementById('lockedMsg').classList.add('show');
+  document.getElementById('loginError').classList.remove('show');
+  clearInterval(lockTimer);
+  lockTimer = setInterval(() => {
+    const remaining = until - Date.now();
+    if (remaining <= 0) {
+      clearInterval(lockTimer);
+      localStorage.removeItem(LOCK_KEY);
+      location.reload();
+      return;
+    }
+    const m = Math.floor(remaining / 60000);
+    const s = Math.floor((remaining % 60000) / 1000);
+    document.getElementById('lockedCountdown').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  }, 1000);
+}
+
+function getAttempts() {
+  return parseInt(localStorage.getItem('ss_attempts') || '0');
+}
+
+function doLogin() {
+  if (checkLock()) return;
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  if (user === CREDS.user && pass === CREDS.pass) {
+    sessionStorage.setItem(AUTH_KEY, 'true');
+    localStorage.removeItem('ss_attempts');
+    document.getElementById('loginScreen').style.display = 'none';
+    logActivity('Admin logged in successfully');
+  } else {
+    const attempts = getAttempts() + 1;
+    localStorage.setItem('ss_attempts', attempts);
+    const remaining = MAX_ATTEMPTS - attempts;
+    document.getElementById('loginError').classList.add('show');
+    if (remaining > 0) {
+      document.getElementById('attemptsMsg').textContent = `${remaining} attempt${remaining!==1?'s':''} remaining before lockout`;
+    }
+    if (attempts >= MAX_ATTEMPTS) {
+      const until = Date.now() + LOCK_MINUTES * 60 * 1000;
+      localStorage.setItem(LOCK_KEY, JSON.stringify({ until }));
+      localStorage.removeItem('ss_attempts');
+      showLocked(until);
+    }
+    // Shake the box
+    const box = document.querySelector('.login-box');
+    box.style.animation = 'none';
+    box.offsetHeight;
+    box.style.animation = 'shake 0.4s ease';
+  }
+}
+
+function togglePwd() {
+  const inp = document.getElementById('loginPass');
+  const btn = document.getElementById('eyeBtn');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+function doLogout() {
+  if (!confirm('Log out of admin panel?')) return;
+  sessionStorage.removeItem(AUTH_KEY);
+  location.reload();
+}
+
+// Shake animation
+const shakeStyle = document.createElement('style');
+shakeStyle.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}';
+document.head.appendChild(shakeStyle);
+
+// ===== INIT =====
+if (checkAuth()) {
+  loadSaved();
+  renderSlides();
+  renderServices();
+  renderTestimonials();
+  renderPlaylist();
+  renderFeatures('basic');
+  renderFeatures('premium');
+  renderFeatures('gold');
+  renderSectionToggles();
+  renderSectionOrder();
+  renderMedia();
+} else {
+  // still init after login
+  window._pendingInit = true;
+}
+
+// Override doLogin to also init after success
+const _origLogin = doLogin;
+doLogin = function() {
+  _origLogin();
+  if (sessionStorage.getItem(AUTH_KEY) === 'true' && window._pendingInit) {
+    window._pendingInit = false;
+    loadSaved();
+    renderSlides();
+    renderServices();
+    renderTestimonials();
+    renderPlaylist();
+    renderFeatures('basic');
+    renderFeatures('premium');
+    renderFeatures('gold');
+    renderSectionToggles();
+    renderSectionOrder();
+    renderMedia();
+  }
+};
+</script>
+</body>
+</html>
